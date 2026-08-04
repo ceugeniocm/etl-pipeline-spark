@@ -18,12 +18,13 @@
     "on_duplicate": "discard"
   },
   "database": {
-    "jdbc_url": "jdbc:mysql://host:3306/database",
-    "user": "etl_user",
-    "password": "${ETL_DB_PASSWORD}",
+    "jdbc_url": "jdbc:mysql://savir005.vpshost12372.mysql.dbaas.com.br:3306/savir005",
+    "user": "savir005",
+    "password": "Carlos#2025",
     "driver": "com.mysql.cj.jdbc.Driver",
-    "num_partitions": 4,
-    "batch_size": 5000
+    "num_partitions": 1,
+    "batch_size": 1000,
+    "socket_timeout": 600000
   },
   "load": {
     "table": "tb_agendamentos",
@@ -37,5 +38,9 @@
     "shuffle_partitions": 200,
     "executor_memory": "8g",
     "num_executors": 4
+  },
+  "run": {
+    "log_level": "WARN",
+    "log_file": "etl.log"
   }
 }

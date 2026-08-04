@@ -30,6 +30,13 @@ if HAS_PYSPARK:
         validate,
         deduplicate,
         _excel_to_parquet,
+        load_jdbc,
+        build_jdbc_properties,
+        write_jdbc_with_retry,
+        _format_int_ptbr,
+        _format_duration_ptbr,
+        print_summary,
+        PipelineProgress,
     )
 
 
@@ -462,7 +469,8 @@ class TestExcelToParquet(unittest.TestCase):
 
             df_result = pd.read_parquet(parquet_path)
             self.assertEqual(len(df_result), 2)
-            self.assertIn(10, df_result["AG_ID"].values)
+            # Como agora lemos como string, verificamos por "10"
+            self.assertIn("10", df_result["AG_ID"].values)
 
     def test_custom_sheet_name(self):
         """Deve ler a aba correta do Excel."""
@@ -477,6 +485,29 @@ class TestExcelToParquet(unittest.TestCase):
 
             df = pd.read_parquet(parquet_path)
             self.assertEqual(len(df), 3)
+
+    def test_large_integers_in_excel(self):
+        """Deve lidar com números gigantes no Excel sem OverflowError."""
+        import pandas as pd
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            excel_path = os.path.join(tmpdir, "large_ints.xlsx")
+            parquet_path = os.path.join(tmpdir, "large_ints.parquet")
+
+            # Valor maior que 2^63 - 1 (simulado como string no Excel para garantir)
+            large_val_str = "55788888479303660000"
+            df_pd = pd.DataFrame({
+                "BIG_ID": [large_val_str],
+                "NORMAL_ID": [123]
+            })
+            df_pd.to_excel(excel_path, index=False)
+
+            # Não deve lançar OverflowError
+            result = _excel_to_parquet(excel_path, "Sheet1", parquet_path)
+
+            self.assertTrue(os.path.exists(parquet_path))
+            df_result = pd.read_parquet(parquet_path)
+            self.assertEqual(df_result["BIG_ID"].iloc[0], large_val_str)
 
 
 @unittest.skipUnless(HAS_PYSPARK, "pyspark não está instalado")
@@ -636,6 +667,273 @@ class TestIntegrationPipeline(SparkTestBase):
         row = df_dedup.collect()[0]
         self.assertEqual(row["id_agendamento"], 1)
         self.assertEqual(row["paciente_nome"], "JOÃO SILVA")
+
+
+@unittest.skipUnless(HAS_PYSPARK, "pyspark não está instalado")
+class TestLoadJDBC(SparkTestBase):
+    """Testes para a função load_jdbc (usando mocks)."""
+
+    def test_load_jdbc_properties_mysql_type_mapping(self):
+        """Deve configurar TIMESTAMP_NTZ para MySQL para evitar erro de default inválido."""
+        from unittest.mock import patch
+        from pyspark.sql.types import StructType, StructField, TimestampType, DateType
+
+        schema = StructType([
+            StructField("data", TimestampType(), True),
+            StructField("dt_nasc", DateType(), True),
+        ])
+        df = self.spark.createDataFrame(self.spark.sparkContext.emptyRDD(), schema)
+
+        config = {
+            "database": {
+                "jdbc_url": "jdbc:mysql://localhost:3306/test",
+                "user": "user",
+                "password": "pass",
+                "num_partitions": 2
+            },
+            "load": {"truncate": True}
+        }
+
+        with patch("pyspark.sql.readwriter.DataFrameWriter.jdbc") as mock_jdbc:
+            load_jdbc(df, config, "tb_test", "overwrite")
+            kwargs = mock_jdbc.call_args[1]
+            properties = kwargs.get('properties', {})
+
+            # Verifica flag truncate (opção oficial do Spark JDBC writer)
+            self.assertEqual(properties.get('truncate'), "true")
+
+            # Verifica mapeamento de tipos MySQL (TIMESTAMP_NTZ para DATETIME no MySQL)
+            col_types = properties.get('createTableColumnTypes', "")
+            self.assertIn("`data` TIMESTAMP_NTZ", col_types)
+            self.assertIn("`dt_nasc` DATE", col_types)
+
+            # Verifica que sessionVariables NÃO está presente (para evitar erro de SUPER privilege)
+            self.assertNotIn('sessionVariables', properties)
+
+    def test_load_jdbc_respects_truncate_flag(self):
+        """Deve respeitar o flag truncate da configuração mesmo em modo overwrite."""
+        from unittest.mock import patch
+        df = self.spark.createDataFrame([("1",)], ["id"])
+        config = {
+            "database": {"jdbc_url": "jdbc:postgresql://localhost/db"},
+            "load": {"truncate": True}
+        }
+
+        with patch("pyspark.sql.readwriter.DataFrameWriter.jdbc") as mock_jdbc:
+            load_jdbc(df, config, "tb_test", "overwrite")
+            kwargs = mock_jdbc.call_args[1]
+            properties = kwargs.get('properties', {})
+            self.assertEqual(properties.get('truncate'), "true")
+
+    def test_load_jdbc_coalesce(self):
+        """Deve chamar coalesce com o num_partitions configurado."""
+        from unittest.mock import patch
+        df = self.spark.createDataFrame([("1",)], ["id"])
+        config = {
+            "database": {"jdbc_url": "jdbc:mysql://localhost/db", "num_partitions": 3},
+            "load": {}
+        }
+        
+        with patch.object(df, "coalesce", return_value=df) as mock_coalesce:
+            with patch("pyspark.sql.readwriter.DataFrameWriter.jdbc"):
+                load_jdbc(df, config, "tb_test", "overwrite")
+                mock_coalesce.assert_called_once_with(3)
+
+
+@unittest.skipUnless(HAS_PYSPARK, "pyspark não está instalado")
+class TestBuildJdbcProperties(unittest.TestCase):
+    """Testes para a criação de propriedades JDBC."""
+
+    def test_build_jdbc_properties_defaults(self):
+        """Deve definir defaults corretos incluindo rewriteBatchedStatements."""
+        db = {}
+        props = build_jdbc_properties(db)
+        self.assertEqual(props["user"], "")
+        self.assertEqual(props["password"], "")
+        self.assertEqual(props["driver"], "com.mysql.cj.jdbc.Driver")
+        self.assertEqual(props["batchsize"], "1000")
+        self.assertEqual(props["connectTimeout"], "30000")
+        self.assertEqual(props["socketTimeout"], "600000")
+        self.assertEqual(props["rewriteBatchedStatements"], "true")
+        self.assertEqual(props["tcpKeepAlive"], "true")
+
+    def test_build_jdbc_properties_env_password(self):
+        """Deve resolver variável de ambiente na senha."""
+        import os
+        os.environ["TEST_DB_PASS"] = "secret123"
+        db = {"password": "${TEST_DB_PASS}"}
+        props = build_jdbc_properties(db)
+        self.assertEqual(props["password"], "secret123")
+        del os.environ["TEST_DB_PASS"]
+
+
+@unittest.skipUnless(HAS_PYSPARK, "pyspark não está instalado")
+class TestWriteJdbcWithRetry(unittest.TestCase):
+    """Testes para o wrapper de retry JDBC."""
+
+    def test_write_success_first_try(self):
+        from unittest.mock import MagicMock, patch
+        mock_df = MagicMock()
+        
+        write_jdbc_with_retry(mock_df, "url", "tb", "overwrite", {})
+        mock_df.write.jdbc.assert_called_once_with(url="url", table="tb", mode="overwrite", properties={})
+
+    def test_write_transient_failure_then_success(self):
+        from unittest.mock import MagicMock, patch
+        from py4j.protocol import Py4JJavaError
+        mock_df = MagicMock()
+        
+        # O mock lança erro transient 2 vezes, depois sucesso
+        mock_df.write.jdbc.side_effect = [
+            Exception("Communications link failure..."),
+            Exception("Connection reset..."),
+            None
+        ]
+        
+        with patch("time.sleep") as mock_sleep:
+            write_jdbc_with_retry(mock_df, "url", "tb", "overwrite", {})
+            
+            self.assertEqual(mock_df.write.jdbc.call_count, 3)
+            self.assertEqual(mock_sleep.call_count, 2)
+            mock_sleep.assert_any_call(5) # wait backoff_seconds * 1
+            mock_sleep.assert_any_call(10) # wait backoff_seconds * 2
+
+    def test_write_transient_failure_exhausted(self):
+        from unittest.mock import MagicMock, patch
+        mock_df = MagicMock()
+        
+        # O mock sempre lança erro
+        mock_df.write.jdbc.side_effect = Exception("Communications link failure...")
+        
+        with patch("time.sleep") as mock_sleep:
+            with self.assertRaises(Exception):
+                write_jdbc_with_retry(mock_df, "url", "tb", "overwrite", {}, max_attempts=2)
+                
+            self.assertEqual(mock_df.write.jdbc.call_count, 2)
+            self.assertEqual(mock_sleep.call_count, 1)
+
+    def test_write_non_transient_failure(self):
+        from unittest.mock import MagicMock
+        mock_df = MagicMock()
+        
+        # Erro não-transiente falha imediatamente
+        mock_df.write.jdbc.side_effect = Exception("Access denied for user...")
+        
+        with self.assertRaises(Exception):
+            write_jdbc_with_retry(mock_df, "url", "tb", "overwrite", {})
+            
+        self.assertEqual(mock_df.write.jdbc.call_count, 1)
+
+
+@unittest.skipUnless(HAS_PYSPARK, "pyspark não está instalado")
+class TestPipelineProgress(unittest.TestCase):
+    """Testes para o indicador de progresso do pipeline."""
+
+    def test_finish_step_preserves_previous_lines(self):
+        """Cada etapa concluída deve gerar uma linha permanente própria,
+        sem sobrescrever a mensagem da etapa anterior."""
+        import io
+        from contextlib import redirect_stdout
+
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            with PipelineProgress(total=2, refresh_interval=60) as progress:
+                progress.start_step("Etapa 1/7: Extração")
+                progress.finish_step()
+                progress.start_step("Etapa 2/7: Mapeamento")
+                progress.finish_step()
+        output = buffer.getvalue()
+
+        self.assertIn("✔ Etapa 1/7: Extração — concluída em", output)
+        self.assertIn("✔ Etapa 2/7: Mapeamento — concluída em", output)
+        # Cada etapa em sua própria linha (histórico preservado)
+        lines = [l for l in output.splitlines() if l.startswith("✔")]
+        self.assertEqual(len(lines), 2)
+
+
+@unittest.skipUnless(HAS_PYSPARK, "pyspark não está instalado")
+class TestExecutionSummary(unittest.TestCase):
+    """Testes para o resumo de execução em pt_BR."""
+
+    def test_format_int_ptbr(self):
+        """Deve usar ponto como separador de milhar (padrão pt_BR)."""
+        self.assertEqual(_format_int_ptbr(0), "0")
+        self.assertEqual(_format_int_ptbr(999), "999")
+        self.assertEqual(_format_int_ptbr(1000), "1.000")
+        self.assertEqual(_format_int_ptbr(1234567), "1.234.567")
+
+    def test_format_duration_seconds_only(self):
+        """Durações curtas devem exibir apenas segundos."""
+        self.assertEqual(_format_duration_ptbr(0), "0s")
+        self.assertEqual(_format_duration_ptbr(45.4), "45s")
+
+    def test_format_duration_minutes(self):
+        """Durações de minutos devem exibir min e s."""
+        self.assertEqual(_format_duration_ptbr(316), "5min 16s")
+        self.assertEqual(_format_duration_ptbr(60), "1min 00s")
+
+    def test_format_duration_hours(self):
+        """Durações longas devem exibir h, min e s."""
+        self.assertEqual(_format_duration_ptbr(3661), "1h 01min 01s")
+
+    def test_print_summary_output(self):
+        """O resumo deve conter linhas lidas, carregadas, rejeitadas e tempo."""
+        import io
+        from contextlib import redirect_stdout
+
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            print_summary(
+                raw_count=125000,
+                loaded_count=118500,
+                rejected_count=6000,
+                duplicates=500,
+                elapsed_seconds=316,
+            )
+        output = buffer.getvalue()
+
+        self.assertIn("Resumo da Execução", output)
+        self.assertIn("Linhas lidas:           125.000", output)
+        self.assertIn("Linhas carregadas:      118.500", output)
+        self.assertIn("Linhas rejeitadas:      6.000", output)
+        self.assertIn("Duplicatas descartadas: 500", output)
+        self.assertIn("Tempo total decorrido:  5min 16s", output)
+
+    def test_print_summary_ignores_log_level(self):
+        """O resumo deve aparecer mesmo com logging em nível WARN."""
+        import io
+        import logging
+        from contextlib import redirect_stdout
+
+        logging.getLogger().setLevel(logging.WARNING)
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            print_summary(1, 1, 0, 0, 1.0)
+
+        self.assertIn("Resumo da Execução", buffer.getvalue())
+
+
+@unittest.skipUnless(HAS_PYSPARK, "pyspark não está instalado")
+class TestWriteJdbcRetryTimeout(unittest.TestCase):
+    """Teste de retry para timeout de socket (erro real observado)."""
+
+    def test_write_socket_timeout_is_transient(self):
+        """Erros de timeout de socket / conexão fechada devem acionar o retry."""
+        from unittest.mock import MagicMock, patch
+        mock_df = MagicMock()
+
+        # Reproduz o erro real: conexão fechada após SocketTimeoutException
+        mock_df.write.jdbc.side_effect = [
+            Exception("No operations allowed after connection closed."),
+            Exception("java.net.SocketTimeoutException: Read timed out"),
+            None,
+        ]
+
+        with patch("time.sleep") as mock_sleep:
+            write_jdbc_with_retry(mock_df, "url", "tb", "overwrite", {})
+
+            self.assertEqual(mock_df.write.jdbc.call_count, 3)
+            self.assertEqual(mock_sleep.call_count, 2)
 
 
 if __name__ == "__main__":

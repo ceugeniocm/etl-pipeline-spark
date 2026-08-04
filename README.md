@@ -14,7 +14,7 @@ Excel/CSV/Parquet → spark.read → Mapeamento → Limpeza → Coerção de Tip
 
 | Etapa | Descrição | API Spark |
 |-------|-----------|-----------|
-| **Extração** | Leitura de Excel, CSV ou Parquet | `spark.read.parquet()`, `spark.read.csv()`, spark-excel |
+| **Extração** | Leitura de Excel, CSV ou Parquet | `spark.read.parquet()`, `spark.read.csv()`, pandas (Excel) |
 | **Mapeamento** | Renomeação de colunas origem → destino | `df.select()`, `F.col().alias()` |
 | **Limpeza** | Trim, upper, remoção de pontuação, colapso de espaços | `F.trim()`, `F.upper()`, `F.regexp_replace()` |
 | **Coerção de Tipos** | Conversão para int, decimal, datetime, date | `df.cast()`, `F.to_date()`, `F.to_timestamp()` |
@@ -39,7 +39,6 @@ pip install -r requirements.txt
 | Conector | Pacote Maven | Finalidade |
 |----------|-------------|-----------|
 | MySQL JDBC | `com.mysql:mysql-connector-j:8.3.0` | Conexão com MySQL |
-| spark-excel | `com.crealytics:spark-excel_2.12:0.20.4` | Leitura de arquivos Excel |
 | Delta Lake | `io.delta:delta-spark_2.12:3.1.0` | Gravação em formato Delta |
 
 ## Uso
@@ -50,9 +49,48 @@ pip install -r requirements.txt
 spark-submit \
     --master "local[*]" \
     --driver-memory 4g \
-    --packages com.mysql:mysql-connector-j:8.3.0,com.crealytics:spark-excel_2.12:0.20.4 \
+    --driver-java-options "-Dlog4j.configurationFile=file:log4j2.properties" \
+    --packages com.mysql:mysql-connector-j:8.3.0 \
     etl_spark.py config_bigdata.json
 ```
+Esse comando executa uma aplicação Apache Spark em Python (`etl_spark.py`) no seu ambiente local, configurando memória, dependências de banco de dados e parâmetros adicionais.
+
+Aqui está o detalhamento de cada parte:
+
+1. `spark-submit`
+
+É o utilitário do Apache Spark usado para **submeter e iniciar scripts ou aplicações** no cluster ou máquina local.
+
+2. `--master "local[*]"`
+
+Define onde e como a aplicação será executada:
+
+* **`local`**: Executa no modo local (na própria máquina), sem precisar de um cluster Spark separado.
+* **`[*]`**: Utiliza **todos os núcleos de CPU disponíveis** na sua máquina para processamento paralelo.
+
+3. `--driver-memory 4g`
+
+Aloca **4 Gigabytes de memória RAM** especificamente para o processo *Driver* do Spark (o processo principal que gerencia o script, constrói os planos de execução e coordena os dados).
+
+4. `--driver-java-options "-Dlog4j.configurationFile=file:log4j2.properties"`
+
+Carrega o arquivo `log4j2.properties` do projeto na inicialização da JVM, suprimindo as mensagens **INFO** de startup do Spark (SparkContext, BlockManager, Executor, etc.), que são emitidas antes de o `log_level` do `config_bigdata.json` ser aplicado. Assim, apenas mensagens `WARN` e `ERROR` aparecem no console.
+
+5. `--packages com.mysql:mysql-connector-j:8.3.0`
+
+Instrui o Spark a baixar e incluir automaticamente uma biblioteca/dependência do repositório Maven central antes de rodar o código:
+
+* **`com.mysql:mysql-connector-j:8.3.0`**: É o driver JDBC oficial do MySQL (versão 8.3.0). Ele permite que o script Spark se conecte e leia/escreva em bancos de dados MySQL.
+
+6. `etl_spark.py`
+
+É o arquivo do seu **script em Python** (PySpark) que contém a lógica de ETL (Extração, Transformação e Carga) que você quer executar.
+
+7. `config_bigdata.json`
+
+É um **argumento fornecido ao script Python**. O `etl_spark.py` vai ler esse arquivo JSON no início da execução (provavelmente para carregar configurações como credenciais do banco, caminhos de arquivos, tabelas, etc.).
+
+Ao final da execução, o pipeline imprime um **resumo de execução** em pt_BR com o total de linhas lidas, carregadas, rejeitadas, duplicatas descartadas e o tempo total decorrido.
 
 ### Execução em Cluster YARN (Produção)
 
@@ -64,7 +102,7 @@ spark-submit \
     --executor-memory 8g \
     --executor-cores 4 \
     --driver-memory 4g \
-    --packages com.mysql:mysql-connector-j:8.3.0,com.crealytics:spark-excel_2.12:0.20.4 \
+    --packages com.mysql:mysql-connector-j:8.3.0 \
     etl_spark.py config_bigdata.json
 ```
 
