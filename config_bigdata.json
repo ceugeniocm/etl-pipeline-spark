@@ -1,8 +1,8 @@
 {
   "source": {
-    "path": "hdfs:///dados/agendamentos.parquet",
-    "format": "parquet",
-    "partition_column": "data"
+    "path": "./input/agendaAnonimizado.xlsx",
+    "format": "excel",
+    "sheet": "AGENDA_1"
   },
   "mapping": "mapping.json",
   "validation": {

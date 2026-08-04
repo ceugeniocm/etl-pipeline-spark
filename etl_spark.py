@@ -60,10 +60,47 @@ def create_spark_session(config: dict) -> SparkSession:
 # Extração
 # ---------------------------------------------------------------------------
 
+def _excel_to_parquet(
+    excel_path: str,
+    sheet: str,
+    parquet_path: str,
+) -> str:
+    """Converte um arquivo Excel para Parquet quando necessário.
+
+    Se o Parquet já existir e for mais recente que o Excel de origem,
+    a conversão é ignorada e o caminho do cache é retornado diretamente.
+
+    Retorna o caminho do arquivo Parquet resultante.
+    """
+    import pandas as pd  # importação local — só carrega quando necessário
+
+    needs_conversion = True
+    if os.path.exists(parquet_path):
+        excel_mtime = os.path.getmtime(excel_path)
+        parquet_mtime = os.path.getmtime(parquet_path)
+        if parquet_mtime >= excel_mtime:
+            needs_conversion = False
+
+    if needs_conversion:
+        print(f"  Convertendo {excel_path} (aba: {sheet}) para Parquet...")
+        df_pd = pd.read_excel(excel_path, sheet_name=sheet)
+        df_pd.to_parquet(parquet_path, index=False)
+        print(f"  Parquet gerado: {parquet_path}")
+    else:
+        print(f"  Cache Parquet encontrado: {parquet_path}")
+
+    return parquet_path
+
+
 def extract(spark: SparkSession, config: dict) -> DataFrame:
     """Lê os dados de entrada conforme o formato configurado.
 
     Formatos suportados: ``parquet``, ``csv`` e ``excel``.
+
+    Quando o formato é ``excel``, o arquivo é automaticamente convertido
+    para Parquet (via pandas) e o Spark lê o Parquet resultante.
+    O Parquet é cacheado ao lado do Excel original e reutilizado enquanto
+    o arquivo de origem não for modificado.
     """
     source = config["source"]
     path = source["path"]
@@ -81,15 +118,10 @@ def extract(spark: SparkSession, config: dict) -> DataFrame:
             .csv(path)
 
     if fmt == "excel":
-        return spark.read \
-            .format("com.crealytics.spark.excel") \
-            .option("header", "true") \
-            .option(
-                "dataAddress",
-                f"'{source.get('sheet', 'AGENDA_1')}'!A1",
-            ) \
-            .option("inferSchema", "true") \
-            .load(path)
+        sheet = source.get("sheet", "AGENDA_1")
+        parquet_cache = os.path.splitext(path)[0] + ".parquet"
+        cached_path = _excel_to_parquet(path, sheet, parquet_cache)
+        return spark.read.parquet(cached_path)
 
     raise ValueError(f"Formato de entrada não suportado: {fmt}")
 

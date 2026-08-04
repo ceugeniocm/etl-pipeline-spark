@@ -29,6 +29,7 @@ if HAS_PYSPARK:
         coerce_types,
         validate,
         deduplicate,
+        _excel_to_parquet,
     )
 
 
@@ -376,6 +377,139 @@ class TestDeduplicate(SparkTestBase):
         }
         result = deduplicate(df, config)
         self.assertEqual(result.count(), 2)
+
+
+@unittest.skipUnless(HAS_PYSPARK, "pyspark não está instalado")
+class TestExcelToParquet(unittest.TestCase):
+    """Testes para a conversão Excel → Parquet."""
+
+    def _create_excel(self, path, sheet="AGENDA_1"):
+        """Cria um arquivo Excel simples para testes."""
+        import pandas as pd
+
+        df = pd.DataFrame({
+            "AG_ID": [1, 2, 3],
+            "BENEF_NOME": ["João", "Maria", "Pedro"],
+            "AGP_VALOR": [100.50, 200.00, 50.25],
+        })
+        df.to_excel(path, sheet_name=sheet, index=False)
+
+    def test_converts_excel_to_parquet(self):
+        """Deve criar arquivo Parquet a partir do Excel."""
+        import pandas as pd
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            excel_path = os.path.join(tmpdir, "dados.xlsx")
+            parquet_path = os.path.join(tmpdir, "dados.parquet")
+            self._create_excel(excel_path)
+
+            result = _excel_to_parquet(excel_path, "AGENDA_1", parquet_path)
+
+            self.assertEqual(result, parquet_path)
+            self.assertTrue(os.path.exists(parquet_path))
+            df = pd.read_parquet(parquet_path)
+            self.assertEqual(len(df), 3)
+            self.assertIn("AG_ID", df.columns)
+
+    def test_uses_cache_when_parquet_is_newer(self):
+        """Deve reutilizar o Parquet existente se for mais recente."""
+        import pandas as pd
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            excel_path = os.path.join(tmpdir, "dados.xlsx")
+            parquet_path = os.path.join(tmpdir, "dados.parquet")
+            self._create_excel(excel_path)
+
+            # Primeira conversão
+            _excel_to_parquet(excel_path, "AGENDA_1", parquet_path)
+            first_mtime = os.path.getmtime(parquet_path)
+
+            # Pequena pausa para garantir diferença de mtime
+            import time
+            time.sleep(0.05)
+
+            # Segunda chamada — deve usar cache (não reconverter)
+            _excel_to_parquet(excel_path, "AGENDA_1", parquet_path)
+            second_mtime = os.path.getmtime(parquet_path)
+
+            self.assertEqual(first_mtime, second_mtime)
+
+    def test_reconverts_when_excel_is_newer(self):
+        """Deve reconverter se o Excel for modificado após o Parquet."""
+        import pandas as pd
+        import time
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            excel_path = os.path.join(tmpdir, "dados.xlsx")
+            parquet_path = os.path.join(tmpdir, "dados.parquet")
+            self._create_excel(excel_path)
+
+            # Primeira conversão
+            _excel_to_parquet(excel_path, "AGENDA_1", parquet_path)
+            first_mtime = os.path.getmtime(parquet_path)
+
+            # Recriar o Excel (simula modificação)
+            time.sleep(0.05)
+            df_new = pd.DataFrame({
+                "AG_ID": [10, 20],
+                "BENEF_NOME": ["Ana", "Carlos"],
+                "AGP_VALOR": [300.00, 400.00],
+            })
+            df_new.to_excel(excel_path, sheet_name="AGENDA_1", index=False)
+
+            # Segunda chamada — deve reconverter
+            _excel_to_parquet(excel_path, "AGENDA_1", parquet_path)
+
+            df_result = pd.read_parquet(parquet_path)
+            self.assertEqual(len(df_result), 2)
+            self.assertIn(10, df_result["AG_ID"].values)
+
+    def test_custom_sheet_name(self):
+        """Deve ler a aba correta do Excel."""
+        import pandas as pd
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            excel_path = os.path.join(tmpdir, "dados.xlsx")
+            parquet_path = os.path.join(tmpdir, "dados.parquet")
+            self._create_excel(excel_path, sheet="Minha_Aba")
+
+            _excel_to_parquet(excel_path, "Minha_Aba", parquet_path)
+
+            df = pd.read_parquet(parquet_path)
+            self.assertEqual(len(df), 3)
+
+
+@unittest.skipUnless(HAS_PYSPARK, "pyspark não está instalado")
+class TestExtractExcel(SparkTestBase):
+    """Testes para extração de Excel (com conversão para Parquet)."""
+
+    def test_extract_excel_creates_parquet_and_reads(self):
+        """extract() com formato excel deve converter e ler via Parquet."""
+        import pandas as pd
+        from etl_spark import extract
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            excel_path = os.path.join(tmpdir, "test.xlsx")
+            df_pd = pd.DataFrame({
+                "AG_ID": [1, 2],
+                "BENEF_NOME": ["João", "Maria"],
+            })
+            df_pd.to_excel(excel_path, sheet_name="AGENDA_1", index=False)
+
+            config = {
+                "source": {
+                    "path": excel_path,
+                    "format": "excel",
+                    "sheet": "AGENDA_1",
+                },
+            }
+            df = extract(self.spark, config)
+            self.assertEqual(df.count(), 2)
+            self.assertIn("AG_ID", df.columns)
+
+            # Verifica que o Parquet foi criado
+            parquet_path = os.path.join(tmpdir, "test.parquet")
+            self.assertTrue(os.path.exists(parquet_path))
 
 
 @unittest.skipUnless(HAS_PYSPARK, "pyspark não está instalado")
