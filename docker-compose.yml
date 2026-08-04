@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: savir005
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./create_tables.sql:/docker-entrypoint-initdb.d/init.sql
+
+  spark:
+    build: .
+    depends_on:
+      - mysql
+    environment:
+      ETL_DB_HOST: mysql
+      ETL_DB_PASSWORD: root
+    volumes:
+      - ./dados:/app/dados
+      - ./output:/app/output

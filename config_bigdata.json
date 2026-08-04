@@ -1,0 +1,41 @@
+{
+  "source": {
+    "path": "hdfs:///dados/agendamentos.parquet",
+    "format": "parquet",
+    "partition_column": "data"
+  },
+  "mapping": "mapping.json",
+  "validation": {
+    "required": ["id_agendamento", "benef_id", "data"],
+    "ranges": {
+      "valor": { "minimum": 0 }
+    },
+    "max_lengths": {
+      "paciente_nome": 255
+    },
+    "rejection_threshold": "5%",
+    "business_key": ["id_agendamento", "benef_id", "data_hora"],
+    "on_duplicate": "discard"
+  },
+  "database": {
+    "jdbc_url": "jdbc:mysql://host:3306/database",
+    "user": "etl_user",
+    "password": "${ETL_DB_PASSWORD}",
+    "driver": "com.mysql.cj.jdbc.Driver",
+    "num_partitions": 4,
+    "batch_size": 5000
+  },
+  "load": {
+    "table": "tb_agendamentos",
+    "mode": "overwrite",
+    "truncate": true,
+    "output_format": "jdbc",
+    "delta_path": "hdfs:///output/agendamentos_delta"
+  },
+  "spark": {
+    "app_name": "ETL Agendamentos - Big Data",
+    "shuffle_partitions": 200,
+    "executor_memory": "8g",
+    "num_executors": 4
+  }
+}
