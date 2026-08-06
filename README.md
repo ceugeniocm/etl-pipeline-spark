@@ -205,4 +205,4 @@ etl-pipeline-spark/
 
 ## Documentação
 
-Consulte `docs/bigdata.md` no projeto [etl-pipeline](../etl-pipeline/) para a documentação completa da arquitetura e decisões de design.
+Consulte `docs/bigdata.md` no projeto [etl-pipeline](https://github.com/ceugeniocm/etl-pipeline) para a documentação completa da arquitetura e decisões de design.
