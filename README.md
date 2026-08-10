@@ -1,8 +1,8 @@
 # ETL Pipeline Spark
 
-Pipeline ETL Big Data com PySpark para processamento distribuído de agendamentos médicos.
-
-Versão distribuída do [etl-pipeline](../etl-pipeline/), utilizando Apache Spark (PySpark) para processar volumes de dados significativamente maiores (1M+ registros).
+Aplicação desenvolvida em Python capaz de realizar a leitura, o
+tratamento e a inserção de dados em um banco de dados hospedado em nuvem, utilizando
+técnicas de programação aplicadas a Big Data.
 
 ## Arquitetura
 
@@ -205,4 +205,4 @@ etl-pipeline-spark/
 
 ## Documentação
 
-Consulte `docs/bigdata.md` no projeto [etl-pipeline](https://github.com/ceugeniocm/etl-pipeline) para a documentação completa da arquitetura e decisões de design.
+Consulte `docs/bigdata-trabalho.md` no projeto [etl-pipeline](https://github.com/ceugeniocm/etl-pipeline) para a documentação completa da arquitetura e decisões de design.
