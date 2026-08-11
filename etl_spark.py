@@ -830,6 +830,9 @@ def run_pipeline(config_path: str) -> None:
             progress.finish_step()
 
             # 9. Tabelas dimensão
+            load_cfg = config.get("load", {})
+            table = load_cfg.get("table", "tb_agendamentos")
+
             if dimensions:
                 logging.info("  Carregando tabelas dimensão...")
                 # Remover a tabela fato da lista de dimensões para carregar separadamente depois,
@@ -839,9 +842,7 @@ def run_pipeline(config_path: str) -> None:
 
             # 10. Carga da Tabela Fato
             logging.info("[7/7] Carga...")
-            load_cfg = config.get("load", {})
             output_format = load_cfg.get("output_format", "jdbc")
-            table = load_cfg.get("table", "tb_agendamentos")
             mode = load_cfg.get("mode", "append")
 
             progress.start_step(f"Etapa 7/7: Carga da tabela fato {table}")

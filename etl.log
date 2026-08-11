@@ -20,3 +20,4 @@
 2026-08-10 22:33:22,247 - INFO -   Carregando tabelas dimensão...
 2026-08-10 22:33:23,311 - INFO - SparkSession encerrada.
 2026-08-10 22:33:23,355 - INFO - Closing down clientserver connection
+2026-08-10 23:37:47,982 - WARNING - Falha transitória JDBC na tabela tb_agendamentos (tentativa 1/3), aguardando 5s: An error occurred while calling o1148.jdbc.
