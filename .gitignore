@@ -1,2 +1,4 @@
 /input/agendaAnonimizado.xlsx
 /input/agendaAnonimizado.parquet
+/.venv/
+/output/

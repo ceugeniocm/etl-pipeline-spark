@@ -106,7 +106,7 @@
       },
       "load": {
         "table": "tb_profissionais",
-        "mode": "truncate",
+        "mode": "overwrite",
         "unique_key": ["prof_id"]
       }
     },
@@ -127,7 +127,7 @@
       },
       "load": {
         "table": "tb_especialidades",
-        "mode": "truncate",
+        "mode": "overwrite",
         "unique_key": ["esp_id"]
       }
     },
@@ -151,7 +151,7 @@
       },
       "load": {
         "table": "tb_beneficiarios",
-        "mode": "truncate",
+        "mode": "overwrite",
         "unique_key": ["benef_id"]
       }
     },
@@ -174,7 +174,7 @@
       },
       "load": {
         "table": "tb_procedimentos",
-        "mode": "truncate",
+        "mode": "overwrite",
         "unique_key": ["tblproced_id"]
       }
     },
@@ -194,7 +194,7 @@
       },
       "load": {
         "table": "tb_convenios",
-        "mode": "truncate",
+        "mode": "overwrite",
         "unique_key": ["conv_ans"]
       }
     },
@@ -214,7 +214,7 @@
       },
       "load": {
         "table": "tb_planos",
-        "mode": "truncate",
+        "mode": "overwrite",
         "unique_key": ["plano_id"]
       }
     },
@@ -234,7 +234,7 @@
       },
       "load": {
         "table": "tb_clinicas",
-        "mode": "truncate",
+        "mode": "overwrite",
         "unique_key": ["cli_id"]
       }
     },
@@ -252,7 +252,7 @@
       },
       "load": {
         "table": "tb_salas",
-        "mode": "truncate",
+        "mode": "overwrite",
         "unique_key": ["sala_id"]
       }
     },
@@ -272,7 +272,7 @@
       },
       "load": {
         "table": "tb_cids",
-        "mode": "truncate",
+        "mode": "overwrite",
         "unique_key": ["tbl_idcid"]
       }
     },
@@ -291,7 +291,7 @@
       },
       "load": {
         "table": "tb_tipos_agendamento",
-        "mode": "truncate",
+        "mode": "overwrite",
         "unique_key": ["tpa_id"]
       }
     },
@@ -310,7 +310,7 @@
       },
       "load": {
         "table": "tb_usuarios",
-        "mode": "truncate",
+        "mode": "overwrite",
         "unique_key": ["user_id"]
       }
     },
@@ -341,7 +341,7 @@
       },
       "load": {
         "table": "tb_agendamentos",
-        "mode": "truncate",
+        "mode": "overwrite",
         "unique_key": ["ag_id"]
       }
     }

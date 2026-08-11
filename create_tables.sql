@@ -35,12 +35,13 @@ CREATE TABLE IF NOT EXISTS tb_convenios (
     conv_cnpj VARCHAR(14)
 );
 
-CREATE TABLE IF NOT EXISTS tb_planos (
-    plano_id INT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS tb_planos
+(
+    plano_id        INT PRIMARY KEY,
     plano_descricao VARCHAR(100),
-    conv_ans VARCHAR(20),
-    FOREIGN KEY (conv_ans) REFERENCES tb_convenios(conv_ans)
-);
+    conv_ans        VARCHAR(20),
+    FOREIGN KEY (conv_ans) REFERENCES tb_convenios (conv_ans) ON DELETE CASCADE ON UPDATE CASCADE
+);;
 
 CREATE TABLE IF NOT EXISTS tb_clinicas (
     cli_id INT PRIMARY KEY,

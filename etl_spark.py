@@ -816,22 +816,35 @@ def run_pipeline(config_path: str) -> None:
             mode = load_cfg.get("mode", "append")
 
             progress.start_step(f"Etapa 7/7: Carga da tabela fato {table}")
+
+            # Filtrar apenas as colunas que pertencem à tabela fato (tb_agendamentos)
+            # para evitar erro AnalysisException caso o DataFrame contenha colunas extras
+            # que não existem na tabela de destino.
+            fact_mapping = next((d for d in dimensions if d.get("load", {}).get("table") == table), None)
+            df_fact = df_dedup
+            if fact_mapping:
+                fact_cols = list(fact_mapping.get("mapping", {}).get("columns", {}).values())
+                available_cols = [c for c in fact_cols if c in df_fact.columns]
+                if available_cols:
+                    df_fact = df_fact.select(available_cols)
+                    logging.info(f"  Colunas selecionadas para {table}: {available_cols}")
+
             if output_format == "jdbc":
-                load_jdbc(df_dedup, config, table, mode)
+                load_jdbc(df_fact, config, table, mode)
                 logging.info(f"  Tabela {table}: {dedup_count} registros carregados via JDBC")
             elif output_format == "parquet":
                 parquet_path = load_cfg.get(
                     "delta_path", "output/agendamentos_parquet",
                 )
                 partition_col = config.get("source", {}).get("partition_column")
-                load_parquet(df_dedup, parquet_path, partition_col)
+                load_parquet(df_fact, parquet_path, partition_col)
                 logging.info(f"  Parquet gravado em {parquet_path}")
             elif output_format == "delta":
                 delta_path = load_cfg.get(
                     "delta_path", "output/agendamentos_delta",
                 )
                 partition_col = config.get("source", {}).get("partition_column")
-                load_delta(df_dedup, delta_path, partition_col)
+                load_delta(df_fact, delta_path, partition_col)
                 logging.info(f"  Delta Lake gravado em {delta_path}")
             progress.finish_step()
 
