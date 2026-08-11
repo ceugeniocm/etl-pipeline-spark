@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS tb_profissionais (
-    prof_id INT PRIMARY KEY,
+    prof_id BIGINT PRIMARY KEY,
     prof_nome VARCHAR(150),
     prof_conselhonum VARCHAR(20),
     prof_conselhouf VARCHAR(2),
@@ -8,13 +8,13 @@ CREATE TABLE IF NOT EXISTS tb_profissionais (
 );
 
 CREATE TABLE IF NOT EXISTS tb_especialidades (
-    esp_id INT PRIMARY KEY,
+    esp_id BIGINT PRIMARY KEY,
     esp_descricao VARCHAR(100),
     esp_cmed INT
 );
 
 CREATE TABLE IF NOT EXISTS tb_beneficiarios (
-    benef_id INT PRIMARY KEY,
+    benef_id BIGINT PRIMARY KEY,
     benef_nome VARCHAR(150),
     benef_dtnasc DATETIME,
     benef_cpf VARCHAR(11),
@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS tb_beneficiarios (
 );
 
 CREATE TABLE IF NOT EXISTS tb_procedimentos (
-    tblproced_id INT PRIMARY KEY,
-    proc_codigo INT,
+    tblproced_id BIGINT PRIMARY KEY,
+    proc_codigo BIGINT,
     proc_descricao VARCHAR(200),
     agp_valor DECIMAL(10,2)
 );
@@ -37,48 +37,48 @@ CREATE TABLE IF NOT EXISTS tb_convenios (
 
 CREATE TABLE IF NOT EXISTS tb_planos
 (
-    plano_id        INT PRIMARY KEY,
+    plano_id        BIGINT PRIMARY KEY,
     plano_descricao VARCHAR(100),
     conv_ans        VARCHAR(20),
     FOREIGN KEY (conv_ans) REFERENCES tb_convenios (conv_ans) ON DELETE CASCADE ON UPDATE CASCADE
 );;
 
 CREATE TABLE IF NOT EXISTS tb_clinicas (
-    cli_id INT PRIMARY KEY,
+    cli_id BIGINT PRIMARY KEY,
     cli_corporativo INT
 );
 
 CREATE TABLE IF NOT EXISTS tb_salas (
-    sala_id INT PRIMARY KEY
+    sala_id BIGINT PRIMARY KEY
 );
 
 CREATE TABLE IF NOT EXISTS tb_cids (
-    tbl_idcid INT PRIMARY KEY,
-    cid_id INT
+    tbl_idcid BIGINT PRIMARY KEY,
+    cid_id BIGINT
 );
 
 CREATE TABLE IF NOT EXISTS tb_tipos_agendamento (
-    tpa_id INT PRIMARY KEY,
+    tpa_id BIGINT PRIMARY KEY,
     tpa_descricao VARCHAR(100)
 );
 
 CREATE TABLE IF NOT EXISTS tb_usuarios (
-    user_id INT PRIMARY KEY,
+    user_id BIGINT PRIMARY KEY,
     nome VARCHAR(150)
 );
 
 CREATE TABLE IF NOT EXISTS tb_agendamentos (
-    ag_id INT PRIMARY KEY,
-    prof_id INT,
-    esp_id INT,
-    benef_id INT,
-    tblproced_id INT,
-    plano_id INT,
-    cli_id INT,
-    sala_id INT,
-    tpa_id INT,
-    tbl_idcid INT,
-    user_id INT,
+    ag_id BIGINT PRIMARY KEY,
+    prof_id BIGINT,
+    esp_id BIGINT,
+    benef_id BIGINT,
+    tblproced_id BIGINT,
+    plano_id BIGINT,
+    cli_id BIGINT,
+    sala_id BIGINT,
+    tpa_id BIGINT,
+    tbl_idcid BIGINT,
+    user_id BIGINT,
     dthoraagenda DATETIME,
     ag_statusagendamento VARCHAR(1),
     FOREIGN KEY (prof_id) REFERENCES tb_profissionais(prof_id),

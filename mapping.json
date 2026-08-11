@@ -98,7 +98,7 @@
           "PROF_STATUS": "prof_status"
         },
         "types": {
-          "prof_id": "int",
+          "prof_id": "bigint",
           "prof_status": "int"
         }
       },
@@ -119,7 +119,7 @@
           "ESP_CMED": "esp_cmed"
         },
         "types": {
-          "esp_id": "int",
+          "esp_id": "bigint",
           "esp_cmed": "int"
         }
       },
@@ -143,7 +143,7 @@
           "BENEF_NUMCARTEIRA": "benef_numcarteira"
         },
         "types": {
-          "benef_id": "int",
+          "benef_id": "bigint",
           "benef_dtnasc": "datetime"
         }
       },
@@ -165,8 +165,8 @@
           "AGP_VALOR": "agp_valor"
         },
         "types": {
-          "tblproced_id": "int",
-          "proc_codigo": "int",
+          "tblproced_id": "bigint",
+          "proc_codigo": "bigint",
           "agp_valor": "decimal"
         }
       },
@@ -207,7 +207,7 @@
           "CONV_ANS": "conv_ans"
         },
         "types": {
-          "plano_id": "int"
+          "plano_id": "bigint"
         }
       },
       "validation": {
@@ -226,7 +226,7 @@
           "CLI_CORPORATIVO": "cli_corporativo"
         },
         "types": {
-          "cli_id": "int",
+          "cli_id": "bigint",
           "cli_corporativo": "int"
         }
       },
@@ -245,7 +245,7 @@
           "SALA_ID": "sala_id"
         },
         "types": {
-          "sala_id": "int"
+          "sala_id": "bigint"
         }
       },
       "validation": {
@@ -264,8 +264,8 @@
           "CID_ID": "cid_id"
         },
         "types": {
-          "tbl_idcid": "int",
-          "cid_id": "int"
+          "tbl_idcid": "bigint",
+          "cid_id": "bigint"
         }
       },
       "validation": {
@@ -284,7 +284,7 @@
           "TPA_DESCRICAO": "tpa_descricao"
         },
         "types": {
-          "tpa_id": "int"
+          "tpa_id": "bigint"
         }
       },
       "validation": {
@@ -303,7 +303,7 @@
           "NOME": "nome"
         },
         "types": {
-          "user_id": "int"
+          "user_id": "bigint"
         }
       },
       "validation": {
@@ -333,7 +333,7 @@
           "AG_STATUSAGENDAMENTO": "ag_statusagendamento"
         },
         "types": {
-          "ag_id": "int",
+          "ag_id": "bigint",
           "dthoraagenda": "datetime"
         }
       },

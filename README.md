@@ -43,7 +43,7 @@ pip install -r requirements.txt
 
 ## Uso
 
-### Execução Local (Desenvolvimento)
+### Execução Local
 
 ```bash
 spark-submit \
