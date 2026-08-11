@@ -6,7 +6,7 @@
   },
   "mapping": "mapping.json",
   "validation": {
-    "required": ["id_agendamento", "benef_id", "data"],
+    "required": ["ag_id", "prof_id", "esp_id", "benef_id", "tblproced_id", "plano_id", "cli_id", "sala_id", "tpa_id", "tbl_idcid", "user-id", "dthoraagenda", "ag_statusagendamento"],
     "ranges": {
       "valor": { "minimum": 0 }
     },
@@ -14,7 +14,7 @@
       "paciente_nome": 255
     },
     "rejection_threshold": "5%",
-    "business_key": ["id_agendamento", "benef_id", "data_hora"],
+    "business_key": ["ag_id", "benef_id", "prof_id", "dthoraagenda"],
     "on_duplicate": "discard"
   },
   "database": {
