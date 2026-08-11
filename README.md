@@ -178,6 +178,16 @@ Ou com unittest:
 python -m unittest discover tests/ -v
 ```
 
+## Entregáveis do Trabalho
+
+Esta aplicação atende a todos os requisitos do trabalho de "Processamento de Dados com Python e Big Data":
+
+1.  **Código-fonte**: `etl_spark.py` e arquivos de configuração.
+2.  **Script SQL**: `create_tables.sql` (Criação das tabelas conforme MER).
+3.  **Documentação de Execução**: Este `README.md`.
+4.  **Banco de Dados Povoado**: Conexão configurada em `config_bigdata.json` para banco na nuvem.
+5.  **Relatório de Tratamentos**: Localizado em `docs/relatorio-tratamento.md`.
+
 ## Estrutura do Projeto
 
 ```
@@ -190,6 +200,10 @@ etl-pipeline-spark/
 ├── Dockerfile             # Imagem Docker com Spark
 ├── docker-compose.yml     # MySQL + Spark para desenvolvimento
 ├── README.md              # Este arquivo
+├── docs/                  # Documentação detalhada
+│   ├── relatorio-tratamento.md
+│   ├── diagrama-entidade-relacionamento.md
+│   └── bigdata-trabalho.md
 └── tests/
     └── test_etl_spark.py  # Testes unitários e de integração
 ```
