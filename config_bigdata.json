@@ -28,7 +28,7 @@
   },
   "load": {
     "table": "tb_agendamentos",
-    "mode": "overwrite",
+    "mode": "append",
     "truncate": false,
     "output_format": "jdbc",
     "delta_path": "hdfs:///output/agendamentos_delta"
