@@ -21,3 +21,60 @@
 2026-08-10 22:33:23,311 - INFO - SparkSession encerrada.
 2026-08-10 22:33:23,355 - INFO - Closing down clientserver connection
 2026-08-10 23:37:47,982 - WARNING - Falha transitória JDBC na tabela tb_agendamentos (tentativa 1/3), aguardando 5s: An error occurred while calling o1148.jdbc.
+2026-08-11 10:55:00,574 - ERROR - Erro ao executar script SQL: CMySQLCursor.execute() got an unexpected keyword argument 'multi'
+2026-08-11 10:56:08,806 - ERROR - Erro ao executar script SQL: CMySQLCursor.execute() got an unexpected keyword argument 'multi'
+2026-08-11 11:06:28,673 - ERROR - Exception while sending command.
+Traceback (most recent call last):
+  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/clientserver.py", line 535, in send_command
+    answer = smart_decode(self.stream.readline()[:-1])
+                          ~~~~~~~~~~~~~~~~~~~~^^
+RuntimeError: reentrant call inside <_io.BufferedReader name=10>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/java_gateway.py", line 1038, in send_command
+    response = connection.send_command(command)
+  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/clientserver.py", line 566, in send_command
+    raise Py4JNetworkError(
+        "Error while sending or receiving", e, proto.ERROR_ON_RECEIVE)
+py4j.protocol.Py4JNetworkError: Error while sending or receiving
+2026-08-11 11:06:28,675 - ERROR - Exception while sending command.
+Traceback (most recent call last):
+  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/clientserver.py", line 535, in send_command
+    answer = smart_decode(self.stream.readline()[:-1])
+                          ~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib64/python3.14/socket.py", line 729, in readinto
+    return self._sock.recv_into(b)
+           ~~~~~~~~~~~~~~~~~~~~^^^
+  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/pyspark.zip/pyspark/core/context.py", line 408, in signal_handler
+    self.cancelAllJobs()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/pyspark.zip/pyspark/core/context.py", line 2506, in cancelAllJobs
+    self._jsc.sc().cancelAllJobs()
+    ~~~~~~~~~~~~^^
+  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/java_gateway.py", line 1362, in __call__
+    return_value = get_return_value(
+        answer, self.gateway_client, self.target_id, self.name)
+  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/pyspark.zip/pyspark/errors/exceptions/captured.py", line 263, in deco
+    return f(*a, **kw)
+  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/protocol.py", line 335, in get_return_value
+    raise Py4JError(
+        "An error occurred while calling {0}{1}{2}".
+        format(target_id, ".", name))
+py4j.protocol.Py4JError: An error occurred while calling o29.sc
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/java_gateway.py", line 1038, in send_command
+    response = connection.send_command(command)
+  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/clientserver.py", line 566, in send_command
+    raise Py4JNetworkError(
+        "Error while sending or receiving", e, proto.ERROR_ON_RECEIVE)
+py4j.protocol.Py4JNetworkError: Error while sending or receiving
+2026-08-11 11:25:29,436 - ERROR - Erro ao executar script SQL: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ';
+
+CREATE TABLE IF NOT EXISTS tb_clinicas (
+    cli_id BIGINT PRIMARY KEY,
+    c' at line 1

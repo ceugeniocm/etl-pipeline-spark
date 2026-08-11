@@ -19,7 +19,9 @@ import os
 import sys
 import threading
 import time
+from urllib.parse import urlparse
 
+import mysql.connector
 from tqdm import tqdm
 
 from pyspark.sql import SparkSession, DataFrame
@@ -634,6 +636,72 @@ def load_dimensions(df: DataFrame, mapping: dict, config: dict, progress=None) -
             progress.finish_step()
 
 
+def execute_sql_script(config: dict, script_path: str) -> None:
+    """Executa um script SQL no banco de dados usando mysql-connector."""
+    db = config.get("database", {})
+    jdbc_url = db.get("jdbc_url", "")
+    user = db.get("user", "")
+    password = _resolve_env_password(db.get("password", ""))
+
+    if not os.path.exists(script_path):
+        logging.error(f"Script SQL não encontrado: {script_path}")
+        return
+
+    # Extrair host e porta da JDBC URL
+    # jdbc:mysql://hostname:port/database
+    try:
+        # Remover prefixo jdbc:mysql:// para usar urlparse
+        url_to_parse = jdbc_url.replace("jdbc:mysql://", "")
+        # Se não houver host (ex: jdbc:mysql:///db), urlparse falha ou retorna vazio
+        parsed_url = urlparse("//" + url_to_parse)
+        host = parsed_url.hostname or "localhost"
+        port = parsed_url.port or 3306
+        database = parsed_url.path.lstrip("/")
+    except Exception as e:
+        logging.error(f"Erro ao parsear JDBC URL {jdbc_url}: {e}")
+        return
+
+    logging.info(f"Executando script SQL: {script_path} no banco {database} ({host})")
+    
+    conn = None
+    try:
+        conn = mysql.connector.connect(
+            host=host,
+            port=port,
+            user=user,
+            password=password,
+            database=database
+        )
+        cursor = conn.cursor()
+        
+        with open(script_path, "r", encoding="utf-8") as f:
+            sql_script = f.read()
+        
+        # O mysql-connector permite executar múltiplos comandos se o script for
+        # processado corretamente. Dividimos por ';' para evitar erros com
+        # comandos vazios ou problemas de parsing em algumas versões do driver.
+        statements = [s.strip() for s in sql_script.split(";") if s.strip()]
+        
+        for statement in statements:
+            cursor.execute(statement)
+            # Consumir resultados (se houver) para manter o cursor limpo
+            while True:
+                if cursor.with_rows:
+                    cursor.fetchall()
+                if not cursor.nextset():
+                    break
+        
+        conn.commit()
+        logging.info("Script SQL executado com sucesso.")
+    except Exception as e:
+        logging.error(f"Erro ao executar script SQL: {e}")
+        if conn:
+            conn.rollback()
+    finally:
+        if conn:
+            conn.close()
+
+
 # ---------------------------------------------------------------------------
 # Pipeline Principal
 # ---------------------------------------------------------------------------
@@ -769,6 +837,14 @@ def run_pipeline(config_path: str) -> None:
     # 2. Criar SparkSession
     spark = create_spark_session(config)
     logging.info(f"SparkSession criada: {spark.sparkContext.appName}")
+
+    # Novo: Executar schema se solicitado
+    run_cfg = config.get("run", {})
+    if run_cfg.get("execute_schema"):
+        logging.info("Execução de schema solicitada (execute_schema=true).")
+        # Podemos permitir configurar o caminho do script SQL no config
+        script_path = run_cfg.get("schema_script", "create_tables.sql")
+        execute_sql_script(config, script_path)
 
     try:
         dimensions = mapping.get("dimensions", [])

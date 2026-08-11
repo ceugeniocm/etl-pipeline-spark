@@ -1,3 +1,16 @@
+DROP TABLE IF EXISTS tb_agendamentos;
+DROP TABLE IF EXISTS tb_tipos_agendamento;
+DROP TABLE IF EXISTS tb_cids;
+DROP TABLE IF EXISTS tb_salas;
+DROP TABLE IF EXISTS tb_clinicas;
+DROP TABLE IF EXISTS tb_planos;
+DROP TABLE IF EXISTS tb_convenios;
+DROP TABLE IF EXISTS tb_procedimentos;
+DROP TABLE IF EXISTS tb_beneficiarios;
+DROP TABLE IF EXISTS tb_especialidades;
+DROP TABLE IF EXISTS tb_profissionais;
+DROP TABLE IF EXISTS tb_usuarios;
+
 CREATE TABLE IF NOT EXISTS tb_profissionais (
     prof_id BIGINT PRIMARY KEY,
     prof_nome VARCHAR(150),
@@ -41,7 +54,7 @@ CREATE TABLE IF NOT EXISTS tb_planos
     plano_descricao VARCHAR(100),
     conv_ans        VARCHAR(20),
     FOREIGN KEY (conv_ans) REFERENCES tb_convenios (conv_ans) ON DELETE CASCADE ON UPDATE CASCADE
-);;
+);
 
 CREATE TABLE IF NOT EXISTS tb_clinicas (
     cli_id BIGINT PRIMARY KEY,

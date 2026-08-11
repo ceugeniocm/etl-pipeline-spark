@@ -36,10 +36,11 @@
   "spark": {
     "app_name": "ETL Agendamentos - Big Data",
     "shuffle_partitions": 200,
-    "executor_memory": "8g",
+    "executor_memory": "4g",
     "num_executors": 4
   },
   "run": {
+    "execute_schema": true,
     "log_level": "WARN",
     "log_file": "etl.log"
   }
