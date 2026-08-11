@@ -6,26 +6,26 @@ Desenvolver individualmente uma aplicação em Python capaz de realizar a leitur
 ## 2. Requisitos do trabalho
 O trabalho deverá atender aos seguintes requisitos:
 
-- **a)** Ser desenvolvido individualmente.
-- **b)** Utilizar a linguagem de programação Python.
-- **c)** Realizar a leitura dos dados presentes no arquivo no formato `.xlsx`, fornecido pelo professor.
-- **d)** Utilizar técnicas e bibliotecas relacionadas ao processamento de dados estudadas na disciplina de Big Data.
-- **e)** Utilizar o banco de dados hospedado em nuvem, cujas informações de acesso foram fornecidas pelo professor.
-- **f)** Realizar o tratamento dos dados antes da inserção no banco, considerando, quando necessário:
+- Ser desenvolvido individualmente.
+- Utilizar a linguagem de programação Python.
+- Realizar a leitura dos dados presentes no arquivo no formato `.xlsx`, fornecido pelo professor.
+- Utilizar técnicas e bibliotecas relacionadas ao processamento de dados estudadas na disciplina de Big Data.
+- Utilizar o banco de dados hospedado em nuvem, cujas informações de acesso foram fornecidas pelo professor.
+- Realizar o tratamento dos dados antes da inserção no banco, considerando, quando necessário:
     - Valores nulos;
     - Registros duplicados;
     - Padronização dos dados;
     - Validação dos tipos de dados;
     - Correção de inconsistências.
-- **g)** Criar as tabelas do banco de dados de acordo com o Modelo Entidade-Relacionamento (MER) fornecido pelo professor.
-- **h)** Respeitar as tabelas, os relacionamentos, as chaves primárias e as chaves estrangeiras definidas no MER.
-- **i)** Estabelecer a conexão entre a aplicação Python e o banco de dados hospedado em nuvem.
-- **j)** Apresentar informações sobre a execução do programa, incluindo:
+- Criar as tabelas do banco de dados de acordo com o Modelo Entidade-Relacionamento (MER) fornecido pelo professor.
+- Respeitar as tabelas, os relacionamentos, as chaves primárias e as chaves estrangeiras definidas no MER.
+- Estabelecer a conexão entre a aplicação Python e o banco de dados hospedado em nuvem.
+- Apresentar informações sobre a execução do programa, incluindo:
     - Quantidade de registros lidos;
     - Quantidade de registros inseridos;
     - Quantidade de registros ignorados;
     - Erros encontrados durante o processamento.
-
+  
 ## 3. Entregáveis
 Cada aluno deverá entregar:
 
