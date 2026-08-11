@@ -829,7 +829,15 @@ def run_pipeline(config_path: str) -> None:
             logging.info(f"  Deduplicados: {dedup_count} (duplicatas removidas: {duplicates})")
             progress.finish_step()
 
-            # 9. Carga
+            # 9. Tabelas dimensão
+            if dimensions:
+                logging.info("  Carregando tabelas dimensão...")
+                # Remover a tabela fato da lista de dimensões para carregar separadamente depois,
+                # garantindo que todas as dimensões reais sejam carregadas primeiro.
+                other_dims = [d for d in dimensions if d.get("load", {}).get("table") != table]
+                load_dimensions(df_dedup, {"dimensions": other_dims}, config, progress=progress)
+
+            # 10. Carga da Tabela Fato
             logging.info("[7/7] Carga...")
             load_cfg = config.get("load", {})
             output_format = load_cfg.get("output_format", "jdbc")
@@ -848,7 +856,7 @@ def run_pipeline(config_path: str) -> None:
                 available_cols = [c for c in fact_cols if c in df_fact.columns]
                 if available_cols:
                     df_fact = df_fact.select(available_cols)
-                    logging.info(f"  Colunas selecionadas para {table}: {available_cols}")
+                    logging.info(f"  Colunas selecionadas for {table}: {available_cols}")
 
             if output_format == "jdbc":
                 load_jdbc(df_fact, config, table, mode)
@@ -868,11 +876,6 @@ def run_pipeline(config_path: str) -> None:
                 load_delta(df_fact, delta_path, partition_col)
                 logging.info(f"  Delta Lake gravado em {delta_path}")
             progress.finish_step()
-
-            # 10. Tabelas dimensão
-            if dimensions:
-                logging.info("  Carregando tabelas dimensão...")
-                load_dimensions(df_dedup, mapping, config, progress=progress)
 
         # Resumo de execução (sempre visível, independente do log_level)
         elapsed_seconds = time.time() - pipeline_start
