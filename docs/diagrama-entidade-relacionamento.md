@@ -2,6 +2,8 @@
 
 Este documento descreve a estrutura das tabelas, campos, tipos de dados e relacionamentos do banco de dados.
 
+![Diagrama de Entidade-Relacionamento](der_agenda_medica.png)
+
 ---
 
 ### 🏥 PROFISSIONAL
