@@ -90,6 +90,7 @@ def create_spark_session(config: dict) -> SparkSession:
             "spark.executor.memory",
             spark_cfg.get("executor_memory", "4g"),
         ) \
+        .config("spark.jars.packages", "com.mysql:mysql-connector-j:8.3.0") \
         .config("spark.sql.debug.maxToStringFields", "1000") \
         .config("spark.ui.showConsoleProgress", "false")
 
@@ -238,6 +239,7 @@ def clean(df: DataFrame, mapping: dict) -> DataFrame:
     norm_updates = {}
     for col_name, norms in normalizers.items():
         if col_name not in df.columns:
+            logging.warning(f"Coluna {col_name} não encontrada para normalização.")
             continue
         
         expr = F.col(col_name)
@@ -271,6 +273,8 @@ def coerce_types(df: DataFrame, mapping: dict) -> DataFrame:
         if col_name not in df.columns:
             continue
         if target_type == "int":
+            type_updates[col_name] = F.expr(f"try_cast(`{col_name}` as BIGINT)")
+        elif target_type == "bigint":
             type_updates[col_name] = F.expr(f"try_cast(`{col_name}` as BIGINT)")
         elif target_type == "decimal":
             type_updates[col_name] = F.expr(f"try_cast(`{col_name}` as DECIMAL(15,2))")
@@ -311,11 +315,17 @@ def validate(df: DataFrame, config: dict):
     for col_name in required_columns:
         if col_name in df.columns:
             required_condition = required_condition & F.col(col_name).isNotNull()
+        else:
+            logging.warning(f"Coluna obrigatória {col_name} não encontrada no DataFrame.")
+            # Se a coluna não existe, a condição para essa linha falha
+            required_condition = F.lit(False)
+            break
 
     # Faixas de valores
     range_condition = F.lit(True)
     for col_name, rules in ranges.items():
         if col_name not in df.columns:
+            logging.warning(f"Coluna {col_name} não encontrada para validação de faixa.")
             continue
         minimum = rules.get("minimum")
         maximum = rules.get("maximum")
@@ -334,6 +344,7 @@ def validate(df: DataFrame, config: dict):
     length_condition = F.lit(True)
     for col_name, max_len in max_lengths.items():
         if col_name not in df.columns:
+            logging.warning(f"Coluna {col_name} não encontrada para validação de comprimento.")
             continue
         length_condition = length_condition & F.when(
             F.col(col_name).isNotNull(),
@@ -499,8 +510,13 @@ def load_jdbc(df: DataFrame, config: dict, table: str, mode: str) -> None:
             f.name for f in df.schema.fields
             if isinstance(f.dataType, (TimestampType, DateType))
         ]
+        bigint_cols = [
+            f.name for f in df.schema.fields
+            if isinstance(f.dataType, LongType)
+        ]
+        
+        col_types = []
         if timestamp_cols:
-            col_types = []
             for col_name in timestamp_cols:
                 field = df.schema[col_name]
                 if isinstance(field.dataType, TimestampType):
@@ -508,6 +524,11 @@ def load_jdbc(df: DataFrame, config: dict, table: str, mode: str) -> None:
                 else:
                     col_types.append(f"`{col_name}` DATE")
 
+        if bigint_cols:
+            for col_name in bigint_cols:
+                col_types.append(f"`{col_name}` BIGINT")
+
+        if col_types:
             jdbc_properties["createTableColumnTypes"] = ", ".join(col_types)
 
     num_partitions = int(db.get("num_partitions", 2))

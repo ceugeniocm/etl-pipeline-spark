@@ -6,12 +6,12 @@
   },
   "mapping": "mapping.json",
   "validation": {
-    "required": ["ag_id", "prof_id", "esp_id", "benef_id", "tblproced_id", "plano_id", "cli_id", "sala_id", "tpa_id", "tbl_idcid", "user-id", "dthoraagenda", "ag_statusagendamento"],
+    "required": ["ag_id", "prof_id", "esp_id", "benef_id", "tblproced_id", "plano_id", "cli_id", "sala_id", "tpa_id", "user_id", "dthoraagenda", "ag_statusagendamento"],
     "ranges": {
-      "valor": { "minimum": 0 }
+      "agp_valor": { "minimum": 0 }
     },
     "max_lengths": {
-      "paciente_nome": 255
+      "benef_nome": 255
     },
     "rejection_threshold": "5%",
     "business_key": ["ag_id", "benef_id", "prof_id", "dthoraagenda"],
