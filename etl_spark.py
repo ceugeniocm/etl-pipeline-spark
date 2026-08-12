@@ -907,7 +907,7 @@ def run_pipeline(config_path: str) -> None:
 
             # 9. Tabelas dimensão
             load_cfg = config.get("load", {})
-            table = load_cfg.get("table", "tb_agendamentos")
+            table = load_cfg.get("table", "AGENDAMENTO")
 
             if dimensions:
                 logging.info("  Carregando tabelas dimensão...")
