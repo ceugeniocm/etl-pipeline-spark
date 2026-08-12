@@ -99,7 +99,7 @@ CREATE TABLE USUARIO (
 CREATE TABLE PLANO (
     PLANO_ID            INT             NOT NULL,
     PLANO_DESCRICAO     VARCHAR(100),
-    CONV_ANS            VARCHAR(20),
+    CONV_ANS            VARCHAR(20)     NOT NULL,
     PRIMARY KEY (PLANO_ID),
     CONSTRAINT FK_PLANO_CONVENIO
         FOREIGN KEY (CONV_ANS)
@@ -122,7 +122,7 @@ CREATE TABLE AGENDAMENTO (
     CLI_ID                  INT             NOT NULL,
     SALA_ID                 INT             NOT NULL,
     TPA_ID                  INT             NOT NULL,
-    TBL_IDCID               INT,
+    TBL_IDCID               INT             NOT NULL,
     USER_ID                 INT             NOT NULL,
     DTHORAAGENDA            DATETIME        NOT NULL,
     AG_STATUSAGENDAMENTO    VARCHAR(1),
