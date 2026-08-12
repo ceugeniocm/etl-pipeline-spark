@@ -674,25 +674,34 @@ def execute_sql_script(config: dict, script_path: str) -> None:
         )
         cursor = conn.cursor()
         
+        # O mysql-connector pode ter problemas com múltiplos comandos.
+        # Vamos ler e processar os comandos individualmente.
         with open(script_path, "r", encoding="utf-8") as f:
             sql_script = f.read()
         
-        # O mysql-connector permite executar múltiplos comandos se o script for
-        # processado corretamente. Dividimos por ';' para evitar erros com
-        # comandos vazios ou problemas de parsing em algumas versões do driver.
+        logging.info(f"Executando script SQL: {script_path}")
+        
+        # Remover comentários para evitar problemas de parsing
+        import re
+        sql_clean = []
+        for line in sql_script.split('\n'):
+            line_clean = re.sub(r'--.*$', '', line)
+            line_clean = re.sub(r'#.*$', '', line_clean)
+            sql_clean.append(line_clean)
+        
+        sql_script = "\n".join(sql_clean)
         statements = [s.strip() for s in sql_script.split(";") if s.strip()]
         
+        count = 0
         for statement in statements:
             cursor.execute(statement)
-            # Consumir resultados (se houver) para manter o cursor limpo
-            while True:
-                if cursor.with_rows:
-                    cursor.fetchall()
-                if not cursor.nextset():
-                    break
+            count += 1
+            # Consumir eventuais conjuntos de resultados adicionais
+            while cursor.nextset():
+                pass
         
         conn.commit()
-        logging.info("Script SQL executado com sucesso.")
+        logging.info(f"Script SQL executado com sucesso ({count} comandos executados).")
     except Exception as e:
         logging.error(f"Erro ao executar script SQL: {e}")
         if conn:
