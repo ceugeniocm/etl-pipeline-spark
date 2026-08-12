@@ -6,7 +6,7 @@
   },
   "mapping": "mapping.json",
   "validation": {
-    "required": ["AG_ID", "PROF_ID", "ESP_ID", "BENEF_ID", "TBLPROCED_ID", "PLANO_ID", "CLI_ID", "SALA_ID", "TPA_ID", "USER_ID", "DTHORAAGENDA", "AG_STATUSAGENDAMENTO"],
+    "required": ["AG_ID", "PROF_ID", "ESP_ID", "BENEF_ID", "TBLPROCED_ID", "PLANO_ID", "CONV_ANS", "CLI_ID", "SALA_ID", "TPA_ID", "USER_ID", "DTHORAAGENDA", "AG_STATUSAGENDAMENTO"],
     "ranges": {
       "AGP_VALOR": { "minimum": 0 },
       "BENEF_ID": { "maximum": 2147483647 },
