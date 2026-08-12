@@ -1,87 +1,87 @@
 {
   "columns": {
-    "PROF_ID": "PROF_ID",
-    "PROF_NOME": "PROF_NOME",
-    "PROF_CONSELHONUM": "PROF_CONSELHONUM",
-    "PROF_CONSELHOUF": "PROF_CONSELHOUF",
-    "PROF_SEXO": "PROF_SEXO",
-    "PROF_STATUS": "PROF_STATUS",
-    "ESP_ID": "ESP_ID",
-    "ESP_DESCRICAO": "ESP_DESCRICAO",
-    "ESP_CMED": "ESP_CMED",
-    "BENEF_ID": "BENEF_ID",
-    "BENEF_NOME": "BENEF_NOME",
-    "BENEF_DTNASC": "BENEF_DTNASC",
-    "BENEF_CPF": "BENEF_CPF",
-    "BENEF_SEXO": "BENEF_SEXO",
-    "BENEF_NUMCARTEIRA": "BENEF_NUMCARTEIRA",
-    "TBLPROCED_ID": "TBLPROCED_ID",
-    "PROC_CODIGO": "PROC_CODIGO",
-    "PROC_DESCRICAO": "PROC_DESCRICAO",
-    "AGP_VALOR": "AGP_VALOR",
-    "CONV_ANS": "CONV_ANS",
-    "CONV_SIGLA": "CONV_SIGLA",
-    "CONV_CNPJ": "CONV_CNPJ",
-    "PLANO_ID": "PLANO_ID",
-    "PLANO_DESCRICAO": "PLANO_DESCRICAO",
-    "AG_ID": "AG_ID",
-    "CLI_ID": "CLI_ID",
-    "CLI_CORPORATIVO": "CLI_CORPORATIVO",
-    "SALA_ID": "SALA_ID",
-    "TBL_IDCID": "TBL_IDCID",
-    "CID_ID": "CID_ID",
-    "TPA_ID": "TPA_ID",
-    "TPA_DESCRICAO": "TPA_DESCRICAO",
-    "USER_ID": "USER_ID",
-    "AG_USERIDAGENDOU": "USER_ID",
-    "NOME": "NOME",
-    "AG_DTHORAAGENDA": "DTHORAAGENDA",
-    "AG_STATUSAGENDAMENTO": "AG_STATUSAGENDAMENTO"
+    "PROF_ID": "prof_id",
+    "PROF_NOME": "prof_nome",
+    "PROF_CONSELHONUM": "prof_conselhonum",
+    "PROF_CONSELHOUF": "prof_conselhouf",
+    "PROF_SEXO": "prof_sexo",
+    "PROF_STATUS": "prof_status",
+    "ESP_ID": "esp_id",
+    "ESP_DESCRICAO": "esp_descricao",
+    "ESP_CMED": "esp_cmed",
+    "BENEF_ID": "benef_id",
+    "BENEF_NOME": "benef_nome",
+    "BENEF_DTNASC": "benef_dtnasc",
+    "BENEF_CPF": "benef_cpf",
+    "BENEF_SEXO": "benef_sexo",
+    "BENEF_NUMCARTEIRA": "benef_numcarteira",
+    "TBLPROCED_ID": "tblproced_id",
+    "PROC_CODIGO": "proc_codigo",
+    "PROC_DESCRICAO": "proc_descricao",
+    "AGP_VALOR": "agp_valor",
+    "CONV_ANS": "conv_ans",
+    "CONV_SIGLA": "conv_sigla",
+    "CONV_CNPJ": "conv_cnpj",
+    "PLANO_ID": "plano_id",
+    "PLANO_DESCRICAO": "plano_descricao",
+    "AG_ID": "ag_id",
+    "CLI_ID": "cli_id",
+    "CLI_CORPORATIVO": "cli_corporativo",
+    "SALA_ID": "sala_id",
+    "TBL_IDCID": "tbl_idcid",
+    "CID_ID": "cid_id",
+    "TPA_ID": "tpa_id",
+    "TPA_DESCRICAO": "tpa_descricao",
+    "USER_ID": "user_id",
+    "AG_USERIDAGENDOU": "user_id",
+    "NOME": "nome",
+    "AG_DTHORAAGENDA": "dthoraagenda",
+    "AG_STATUSAGENDAMENTO": "ag_statusagendamento"
   },
   "types": {
-    "PROF_ID": "bigint",
-    "PROF_NOME": "str",
-    "PROF_CONSELHONUM": "str",
-    "PROF_CONSELHOUF": "str",
-    "PROF_SEXO": "str",
-    "PROF_STATUS": "int",
-    "ESP_ID": "bigint",
-    "ESP_DESCRICAO": "str",
-    "ESP_CMED": "int",
-    "BENEF_ID": "bigint",
-    "BENEF_NOME": "str",
-    "BENEF_DTNASC": "datetime",
-    "BENEF_CPF": "str",
-    "BENEF_SEXO": "str",
-    "BENEF_NUMCARTEIRA": "str",
-    "TBLPROCED_ID": "bigint",
-    "PROC_CODIGO": "bigint",
-    "PROC_DESCRICAO": "str",
-    "AGP_VALOR": "decimal",
-    "CONV_ANS": "str",
-    "CONV_SIGLA": "str",
-    "CONV_CNPJ": "str",
-    "PLANO_ID": "bigint",
-    "PLANO_DESCRICAO": "str",
-    "AG_ID": "bigint",
-    "CLI_ID": "bigint",
-    "CLI_CORPORATIVO": "int",
-    "SALA_ID": "bigint",
-    "TBL_IDCID": "bigint",
-    "CID_ID": "bigint",
-    "TPA_ID": "bigint",
-    "TPA_DESCRICAO": "str",
-    "USER_ID": "bigint",
-    "NOME": "str",
-    "DTHORAAGENDA": "datetime",
-    "AG_STATUSAGENDAMENTO": "str"
+    "prof_id": "bigint",
+    "prof_nome": "str",
+    "prof_conselhonum": "str",
+    "prof_conselhouf": "str",
+    "prof_sexo": "str",
+    "prof_status": "int",
+    "esp_id": "bigint",
+    "esp_descricao": "str",
+    "esp_cmed": "int",
+    "benef_id": "bigint",
+    "benef_nome": "str",
+    "benef_dtnasc": "datetime",
+    "benef_cpf": "str",
+    "benef_sexo": "str",
+    "benef_numcarteira": "str",
+    "tblproced_id": "bigint",
+    "proc_codigo": "bigint",
+    "proc_descricao": "str",
+    "agp_valor": "decimal",
+    "conv_ans": "str",
+    "conv_sigla": "str",
+    "conv_cnpj": "str",
+    "plano_id": "bigint",
+    "plano_descricao": "str",
+    "ag_id": "bigint",
+    "cli_id": "bigint",
+    "cli_corporativo": "int",
+    "sala_id": "bigint",
+    "tbl_idcid": "bigint",
+    "cid_id": "bigint",
+    "tpa_id": "bigint",
+    "tpa_descricao": "str",
+    "user_id": "bigint",
+    "nome": "str",
+    "dthoraagenda": "datetime",
+    "ag_statusagendamento": "str"
   },
   "normalizers": {
-    "BENEF_NOME": [
+    "benef_nome": [
       "trim",
       "upper"
     ],
-    "PROF_NOME": [
+    "prof_nome": [
       "trim",
       "upper"
     ]
@@ -90,260 +90,260 @@
     {
       "mapping": {
         "columns": {
-          "PROF_ID": "PROF_ID",
-          "PROF_NOME": "PROF_NOME",
-          "PROF_CONSELHONUM": "PROF_CONSELHONUM",
-          "PROF_CONSELHOUF": "PROF_CONSELHOUF",
-          "PROF_SEXO": "PROF_SEXO",
-          "PROF_STATUS": "PROF_STATUS"
+          "PROF_ID": "prof_id",
+          "PROF_NOME": "prof_nome",
+          "PROF_CONSELHONUM": "prof_conselhonum",
+          "PROF_CONSELHOUF": "prof_conselhouf",
+          "PROF_SEXO": "prof_sexo",
+          "PROF_STATUS": "prof_status"
         },
         "types": {
-          "PROF_ID": "bigint",
-          "PROF_STATUS": "int"
+          "prof_id": "bigint",
+          "prof_status": "int"
         }
       },
       "validation": {
-        "required": ["PROF_ID"]
+        "required": ["prof_id"]
       },
       "load": {
-        "table": "PROFISSIONAL",
+        "table": "tb_profissionais",
         "mode": "append",
-        "unique_key": ["PROF_ID"]
+        "unique_key": ["prof_id"]
       }
     },
     {
       "mapping": {
         "columns": {
-          "ESP_ID": "ESP_ID",
-          "ESP_DESCRICAO": "ESP_DESCRICAO",
-          "ESP_CMED": "ESP_CMED"
+          "ESP_ID": "esp_id",
+          "ESP_DESCRICAO": "esp_descricao",
+          "ESP_CMED": "esp_cmed"
         },
         "types": {
-          "ESP_ID": "bigint",
-          "ESP_CMED": "int"
+          "esp_id": "bigint",
+          "esp_cmed": "int"
         }
       },
       "validation": {
-        "required": ["ESP_ID"]
+        "required": ["esp_id"]
       },
       "load": {
-        "table": "ESPECIALIDADE",
+        "table": "tb_especialidades",
         "mode": "append",
-        "unique_key": ["ESP_ID"]
+        "unique_key": ["esp_id"]
       }
     },
     {
       "mapping": {
         "columns": {
-          "BENEF_ID": "BENEF_ID",
-          "BENEF_NOME": "BENEF_NOME",
-          "BENEF_DTNASC": "BENEF_DTNASC",
-          "BENEF_CPF": "BENEF_CPF",
-          "BENEF_SEXO": "BENEF_SEXO",
-          "BENEF_NUMCARTEIRA": "BENEF_NUMCARTEIRA"
+          "BENEF_ID": "benef_id",
+          "BENEF_NOME": "benef_nome",
+          "BENEF_DTNASC": "benef_dtnasc",
+          "BENEF_CPF": "benef_cpf",
+          "BENEF_SEXO": "benef_sexo",
+          "BENEF_NUMCARTEIRA": "benef_numcarteira"
         },
         "types": {
-          "BENEF_ID": "bigint",
-          "BENEF_DTNASC": "datetime"
+          "benef_id": "bigint",
+          "benef_dtnasc": "datetime"
         }
       },
       "validation": {
-        "required": ["BENEF_ID"]
+        "required": ["benef_id"]
       },
       "load": {
-        "table": "BENEFICIARIO",
+        "table": "tb_beneficiarios",
         "mode": "append",
-        "unique_key": ["BENEF_ID"]
+        "unique_key": ["benef_id"]
       }
     },
     {
       "mapping": {
         "columns": {
-          "TBLPROCED_ID": "TBLPROCED_ID",
-          "PROC_CODIGO": "PROC_CODIGO",
-          "PROC_DESCRICAO": "PROC_DESCRICAO",
-          "AGP_VALOR": "AGP_VALOR"
+          "TBLPROCED_ID": "tblproced_id",
+          "PROC_CODIGO": "proc_codigo",
+          "PROC_DESCRICAO": "proc_descricao",
+          "AGP_VALOR": "agp_valor"
         },
         "types": {
-          "TBLPROCED_ID": "bigint",
-          "PROC_CODIGO": "bigint",
-          "AGP_VALOR": "decimal"
+          "tblproced_id": "bigint",
+          "proc_codigo": "bigint",
+          "agp_valor": "decimal"
         }
       },
       "validation": {
-        "required": ["TBLPROCED_ID"]
+        "required": ["tblproced_id"]
       },
       "load": {
-        "table": "PROCEDIMENTO",
+        "table": "tb_procedimentos",
         "mode": "append",
-        "unique_key": ["TBLPROCED_ID"]
+        "unique_key": ["tblproced_id"]
       }
     },
     {
       "mapping": {
         "columns": {
-          "CONV_ANS": "CONV_ANS",
-          "CONV_SIGLA": "CONV_SIGLA",
-          "CONV_CNPJ": "CONV_CNPJ"
+          "CONV_ANS": "conv_ans",
+          "CONV_SIGLA": "conv_sigla",
+          "CONV_CNPJ": "conv_cnpj"
         },
         "types": {
-          "CONV_ANS": "str"
+          "conv_ans": "str"
         }
       },
       "validation": {
-        "required": ["CONV_ANS"]
+        "required": ["conv_ans"]
       },
       "load": {
-        "table": "CONVENIO",
+        "table": "tb_convenios",
         "mode": "append",
-        "unique_key": ["CONV_ANS"]
+        "unique_key": ["conv_ans"]
       }
     },
     {
       "mapping": {
         "columns": {
-          "PLANO_ID": "PLANO_ID",
-          "PLANO_DESCRICAO": "PLANO_DESCRICAO",
-          "CONV_ANS": "CONV_ANS"
+          "PLANO_ID": "plano_id",
+          "PLANO_DESCRICAO": "plano_descricao",
+          "CONV_ANS": "conv_ans"
         },
         "types": {
-          "PLANO_ID": "bigint"
+          "plano_id": "bigint"
         }
       },
       "validation": {
-        "required": ["PLANO_ID"]
+        "required": ["plano_id"]
       },
       "load": {
-        "table": "PLANO",
+        "table": "tb_planos",
         "mode": "append",
-        "unique_key": ["PLANO_ID"]
+        "unique_key": ["plano_id"]
       }
     },
     {
       "mapping": {
         "columns": {
-          "CLI_ID": "CLI_ID",
-          "CLI_CORPORATIVO": "CLI_CORPORATIVO"
+          "CLI_ID": "cli_id",
+          "CLI_CORPORATIVO": "cli_corporativo"
         },
         "types": {
-          "CLI_ID": "bigint",
-          "CLI_CORPORATIVO": "int"
+          "cli_id": "bigint",
+          "cli_corporativo": "int"
         }
       },
       "validation": {
-        "required": ["CLI_ID"]
+        "required": ["cli_id"]
       },
       "load": {
-        "table": "CLINICA",
+        "table": "tb_clinicas",
         "mode": "append",
-        "unique_key": ["CLI_ID"]
+        "unique_key": ["cli_id"]
       }
     },
     {
       "mapping": {
         "columns": {
-          "SALA_ID": "SALA_ID"
+          "SALA_ID": "sala_id"
         },
         "types": {
-          "SALA_ID": "bigint"
+          "sala_id": "bigint"
         }
       },
       "validation": {
-        "required": ["SALA_ID"]
+        "required": ["sala_id"]
       },
       "load": {
-        "table": "SALA",
+        "table": "tb_salas",
         "mode": "append",
-        "unique_key": ["SALA_ID"]
+        "unique_key": ["sala_id"]
       }
     },
     {
       "mapping": {
         "columns": {
-          "TBL_IDCID": "TBL_IDCID",
-          "CID_ID": "CID_ID"
+          "TBL_IDCID": "tbl_idcid",
+          "CID_ID": "cid_id"
         },
         "types": {
-          "TBL_IDCID": "bigint",
-          "CID_ID": "bigint"
+          "tbl_idcid": "bigint",
+          "cid_id": "bigint"
         }
       },
       "validation": {
-        "required": ["TBL_IDCID"]
+        "required": ["tbl_idcid"]
       },
       "load": {
-        "table": "CID",
+        "table": "tb_cids",
         "mode": "append",
-        "unique_key": ["TBL_IDCID"]
+        "unique_key": ["tbl_idcid"]
       }
     },
     {
       "mapping": {
         "columns": {
-          "TPA_ID": "TPA_ID",
-          "TPA_DESCRICAO": "TPA_DESCRICAO"
+          "TPA_ID": "tpa_id",
+          "TPA_DESCRICAO": "tpa_descricao"
         },
         "types": {
-          "TPA_ID": "bigint"
+          "tpa_id": "bigint"
         }
       },
       "validation": {
-        "required": ["TPA_ID"]
+        "required": ["tpa_id"]
       },
       "load": {
-        "table": "TIPO_AGENDAMENTO",
+        "table": "tb_tipos_agendamento",
         "mode": "append",
-        "unique_key": ["TPA_ID"]
+        "unique_key": ["tpa_id"]
       }
     },
     {
       "mapping": {
         "columns": {
-          "USER_ID": "USER_ID",
-          "NOME": "NOME"
+          "USER_ID": "user_id",
+          "NOME": "nome"
         },
         "types": {
-          "USER_ID": "bigint"
+          "user_id": "bigint"
         }
       },
       "validation": {
-        "required": ["USER_ID"]
+        "required": ["user_id"]
       },
       "load": {
-        "table": "USUARIO",
+        "table": "tb_usuarios",
         "mode": "append",
-        "unique_key": ["USER_ID"]
+        "unique_key": ["user_id"]
       }
     },
     {
       "mapping": {
         "columns": {
-          "AG_ID": "AG_ID",
-          "PROF_ID": "PROF_ID",
-          "ESP_ID": "ESP_ID",
-          "BENEF_ID": "BENEF_ID",
-          "TBLPROCED_ID": "TBLPROCED_ID",
-          "PLANO_ID": "PLANO_ID",
-          "CLI_ID": "CLI_ID",
-          "SALA_ID": "SALA_ID",
-          "TPA_ID": "TPA_ID",
-          "TBL_IDCID": "TBL_IDCID",
-          "USER_ID": "USER_ID",
-          "DTHORAAGENDA": "DTHORAAGENDA",
-          "AG_STATUSAGENDAMENTO": "AG_STATUSAGENDAMENTO"
+          "AG_ID": "ag_id",
+          "PROF_ID": "prof_id",
+          "ESP_ID": "esp_id",
+          "BENEF_ID": "benef_id",
+          "TBLPROCED_ID": "tblproced_id",
+          "PLANO_ID": "plano_id",
+          "CLI_ID": "cli_id",
+          "SALA_ID": "sala_id",
+          "TPA_ID": "tpa_id",
+          "TBL_IDCID": "tbl_idcid",
+          "USER_ID": "user_id",
+          "DTHORAAGENDA": "dthoraagenda",
+          "AG_STATUSAGENDAMENTO": "ag_statusagendamento"
         },
         "types": {
-          "AG_ID": "bigint",
-          "DTHORAAGENDA": "datetime"
+          "ag_id": "bigint",
+          "dthoraagenda": "datetime"
         }
       },
       "validation": {
-        "required": ["AG_ID"]
+        "required": ["ag_id"]
       },
       "load": {
-        "table": "AGENDAMENTO",
+        "table": "tb_agendamentos",
         "mode": "append",
-        "unique_key": ["AG_ID"]
+        "unique_key": ["ag_id"]
       }
     }
   ]

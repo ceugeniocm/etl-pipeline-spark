@@ -6,15 +6,15 @@
   },
   "mapping": "mapping.json",
   "validation": {
-    "required": ["AG_ID", "PROF_ID", "ESP_ID", "BENEF_ID", "TBLPROCED_ID", "PLANO_ID", "CLI_ID", "SALA_ID", "TPA_ID", "TBL_IDCID", "USER_ID", "DTHORAAGENDA", "AG_STATUSAGENDAMENTO"],
+    "required": ["ag_id", "prof_id", "esp_id", "benef_id", "tblproced_id", "plano_id", "cli_id", "sala_id", "tpa_id", "user_id", "dthoraagenda", "ag_statusagendamento"],
     "ranges": {
-      "AGP_VALOR": { "minimum": 0 }
+      "agp_valor": { "minimum": 0 }
     },
     "max_lengths": {
-      "BENEF_NOME": 255
+      "benef_nome": 255
     },
     "rejection_threshold": "5%",
-    "business_key": ["AG_ID", "BENEF_ID", "PROF_ID", "DTHORAAGENDA"],
+    "business_key": ["ag_id", "benef_id", "prof_id", "dthoraagenda"],
     "on_duplicate": "discard"
   },
   "database": {
@@ -27,7 +27,7 @@
     "socket_timeout": 600000
   },
   "load": {
-    "table": "AGENDAMENTO",
+    "table": "tb_agendamentos",
     "mode": "append",
     "truncate": false,
     "output_format": "jdbc",

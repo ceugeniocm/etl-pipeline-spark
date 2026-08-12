@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS USUARIO;
 -- ============================================================
 
 CREATE TABLE PROFISSIONAL (
-    PROF_ID             BIGINT          NOT NULL,
+    PROF_ID             INT             NOT NULL,
     PROF_NOME           VARCHAR(150)    NOT NULL,
     PROF_CONSELHONUM    VARCHAR(20),
     PROF_CONSELHOUF     VARCHAR(2),
@@ -32,14 +32,14 @@ CREATE TABLE PROFISSIONAL (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE ESPECIALIDADE (
-    ESP_ID              BIGINT          NOT NULL,
+    ESP_ID              INT             NOT NULL,
     ESP_DESCRICAO       VARCHAR(100)    NOT NULL,
     ESP_CMED            INT,
     PRIMARY KEY (ESP_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE BENEFICIARIO (
-    BENEF_ID            BIGINT          NOT NULL,
+    BENEF_ID            INT             NOT NULL,
     BENEF_NOME          VARCHAR(150)    NOT NULL,
     BENEF_DTNASC        DATETIME,
     BENEF_CPF           VARCHAR(11),
@@ -49,8 +49,8 @@ CREATE TABLE BENEFICIARIO (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE PROCEDIMENTO (
-    TBLPROCED_ID        BIGINT          NOT NULL,
-    PROC_CODIGO         BIGINT,
+    TBLPROCED_ID        INT             NOT NULL,
+    PROC_CODIGO         INT,
     PROC_DESCRICAO      VARCHAR(200),
     AGP_VALOR           DECIMAL(10,2),
     PRIMARY KEY (TBLPROCED_ID)
@@ -64,30 +64,30 @@ CREATE TABLE CONVENIO (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE CLINICA (
-    CLI_ID              BIGINT          NOT NULL,
+    CLI_ID              INT             NOT NULL,
     CLI_CORPORATIVO     INT,
     PRIMARY KEY (CLI_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE SALA (
-    SALA_ID             BIGINT          NOT NULL,
+    SALA_ID             INT             NOT NULL,
     PRIMARY KEY (SALA_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE CID (
-    TBL_IDCID           BIGINT          NOT NULL,
-    CID_ID              BIGINT,
+    TBL_IDCID           INT             NOT NULL,
+    CID_ID              INT,
     PRIMARY KEY (TBL_IDCID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE TIPO_AGENDAMENTO (
-    TPA_ID              BIGINT          NOT NULL,
+    TPA_ID              INT             NOT NULL,
     TPA_DESCRICAO       VARCHAR(100),
     PRIMARY KEY (TPA_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE USUARIO (
-    USER_ID             BIGINT          NOT NULL,
+    USER_ID             INT             NOT NULL,
     NOME                VARCHAR(150),
     PRIMARY KEY (USER_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -97,9 +97,9 @@ CREATE TABLE USUARIO (
 -- ============================================================
 
 CREATE TABLE PLANO (
-    PLANO_ID            BIGINT          NOT NULL,
+    PLANO_ID            INT             NOT NULL,
     PLANO_DESCRICAO     VARCHAR(100),
-    CONV_ANS            VARCHAR(20),
+    CONV_ANS            VARCHAR(20)     NOT NULL,
     PRIMARY KEY (PLANO_ID),
     CONSTRAINT FK_PLANO_CONVENIO
         FOREIGN KEY (CONV_ANS)
@@ -113,17 +113,17 @@ CREATE TABLE PLANO (
 -- ============================================================
 
 CREATE TABLE AGENDAMENTO (
-    AG_ID                   BIGINT          NOT NULL,
-    PROF_ID                 BIGINT          NOT NULL,
-    ESP_ID                  BIGINT          NOT NULL,
-    BENEF_ID                BIGINT          NOT NULL,
-    TBLPROCED_ID            BIGINT          NOT NULL,
-    PLANO_ID                BIGINT          NOT NULL,
-    CLI_ID                  BIGINT          NOT NULL,
-    SALA_ID                 BIGINT          NOT NULL,
-    TPA_ID                  BIGINT          NOT NULL,
-    TBL_IDCID               BIGINT          NOT NULL,
-    USER_ID                 BIGINT          NOT NULL,
+    AG_ID                   INT             NOT NULL,
+    PROF_ID                 INT             NOT NULL,
+    ESP_ID                  INT             NOT NULL,
+    BENEF_ID                INT             NOT NULL,
+    TBLPROCED_ID            INT             NOT NULL,
+    PLANO_ID                INT             NOT NULL,
+    CLI_ID                  INT             NOT NULL,
+    SALA_ID                 INT             NOT NULL,
+    TPA_ID                  INT             NOT NULL,
+    TBL_IDCID               INT             NOT NULL,
+    USER_ID                 INT             NOT NULL,
     DTHORAAGENDA            DATETIME        NOT NULL,
     AG_STATUSAGENDAMENTO    VARCHAR(1),
     PRIMARY KEY (AG_ID),

@@ -1,80 +1,52 @@
-2026-08-10 22:33:06,959 - INFO - ============================================================
-2026-08-10 22:33:06,959 - INFO - ETL Pipeline Big Data — PySpark
-2026-08-10 22:33:06,959 - INFO - ============================================================
-2026-08-10 22:33:08,870 - INFO - SparkSession criada: ETL Agendamentos - Big Data
-2026-08-10 22:33:08,878 - INFO - [1/7] Extração...
-2026-08-10 22:33:08,878 - INFO -   Cache Parquet encontrado: ./input/agendaAnonimizado.parquet
-2026-08-10 22:33:10,668 - INFO -   Registros lidos: 462199
-2026-08-10 22:33:10,669 - INFO - [2/7] Mapeamento de colunas...
-2026-08-10 22:33:10,742 - INFO - [3/7] Limpeza e normalização...
-2026-08-10 22:33:10,891 - INFO - [4/7] Coerção de tipos...
-2026-08-10 22:33:11,173 - INFO - [5/7] Validação...
-2026-08-10 22:33:18,023 - INFO -   Válidos: 0
-2026-08-10 22:33:18,023 - INFO -   Rejeitados: 462199
-2026-08-10 22:33:20,113 - INFO -   Relatório de rejeições gravado em output/rejeicoes/
-2026-08-10 22:33:20,114 - INFO - [6/7] Deduplicação...
-2026-08-10 22:33:20,301 - INFO -   Deduplicados: 0 (duplicatas removidas: 0)
-2026-08-10 22:33:20,302 - INFO - [7/7] Carga...
-2026-08-10 22:33:20,310 - INFO -   Colunas selecionadas para tb_agendamentos: ['ag_id', 'prof_id', 'esp_id', 'benef_id', 'tblproced_id', 'plano_id', 'cli_id', 'sala_id', 'tpa_id', 'tbl_idcid', 'dthoraagenda', 'ag_statusagendamento']
-2026-08-10 22:33:22,247 - INFO -   Tabela tb_agendamentos: 0 registros carregados via JDBC
-2026-08-10 22:33:22,247 - INFO -   Carregando tabelas dimensão...
-2026-08-10 22:33:23,311 - INFO - SparkSession encerrada.
-2026-08-10 22:33:23,355 - INFO - Closing down clientserver connection
-2026-08-10 23:37:47,982 - WARNING - Falha transitória JDBC na tabela tb_agendamentos (tentativa 1/3), aguardando 5s: An error occurred while calling o1148.jdbc.
-2026-08-11 10:55:00,574 - ERROR - Erro ao executar script SQL: CMySQLCursor.execute() got an unexpected keyword argument 'multi'
-2026-08-11 10:56:08,806 - ERROR - Erro ao executar script SQL: CMySQLCursor.execute() got an unexpected keyword argument 'multi'
-2026-08-11 11:06:28,673 - ERROR - Exception while sending command.
-Traceback (most recent call last):
-  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/clientserver.py", line 535, in send_command
-    answer = smart_decode(self.stream.readline()[:-1])
-                          ~~~~~~~~~~~~~~~~~~~~^^
-RuntimeError: reentrant call inside <_io.BufferedReader name=10>
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/java_gateway.py", line 1038, in send_command
-    response = connection.send_command(command)
-  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/clientserver.py", line 566, in send_command
-    raise Py4JNetworkError(
-        "Error while sending or receiving", e, proto.ERROR_ON_RECEIVE)
-py4j.protocol.Py4JNetworkError: Error while sending or receiving
-2026-08-11 11:06:28,675 - ERROR - Exception while sending command.
-Traceback (most recent call last):
-  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/clientserver.py", line 535, in send_command
-    answer = smart_decode(self.stream.readline()[:-1])
-                          ~~~~~~~~~~~~~~~~~~~~^^
-  File "/usr/lib64/python3.14/socket.py", line 729, in readinto
-    return self._sock.recv_into(b)
-           ~~~~~~~~~~~~~~~~~~~~^^^
-  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/pyspark.zip/pyspark/core/context.py", line 408, in signal_handler
-    self.cancelAllJobs()
-    ~~~~~~~~~~~~~~~~~~^^
-  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/pyspark.zip/pyspark/core/context.py", line 2506, in cancelAllJobs
-    self._jsc.sc().cancelAllJobs()
-    ~~~~~~~~~~~~^^
-  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/java_gateway.py", line 1362, in __call__
-    return_value = get_return_value(
-        answer, self.gateway_client, self.target_id, self.name)
-  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/pyspark.zip/pyspark/errors/exceptions/captured.py", line 263, in deco
-    return f(*a, **kw)
-  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/protocol.py", line 335, in get_return_value
-    raise Py4JError(
-        "An error occurred while calling {0}{1}{2}".
-        format(target_id, ".", name))
-py4j.protocol.Py4JError: An error occurred while calling o29.sc
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/java_gateway.py", line 1038, in send_command
-    response = connection.send_command(command)
-  File "/home/carlos/PycharmProjects/etl-pipeline-spark/.venv/lib64/python3.14/site-packages/pyspark/python/lib/py4j-0.10.9.9-src.zip/py4j/clientserver.py", line 566, in send_command
-    raise Py4JNetworkError(
-        "Error while sending or receiving", e, proto.ERROR_ON_RECEIVE)
-py4j.protocol.Py4JNetworkError: Error while sending or receiving
-2026-08-11 11:25:29,436 - ERROR - Erro ao executar script SQL: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ';
-
-CREATE TABLE IF NOT EXISTS tb_clinicas (
-    cli_id BIGINT PRIMARY KEY,
-    c' at line 1
+2026-08-11 22:41:45,929 - INFO - ============================================================
+2026-08-11 22:41:45,929 - INFO - ETL Pipeline Big Data — PySpark
+2026-08-11 22:41:45,929 - INFO - ============================================================
+2026-08-11 22:41:48,908 - INFO - SparkSession criada: ETL Agendamentos - Big Data
+2026-08-11 22:41:48,908 - INFO - Execução de schema solicitada (execute_schema=true).
+2026-08-11 22:41:48,909 - INFO - Executando script SQL: create_tables.sql no banco savir005 (savir005.vpshost12372.mysql.dbaas.com.br)
+2026-08-11 22:41:49,422 - INFO - Executando script SQL: create_tables.sql
+2026-08-11 22:41:51,218 - INFO - Script SQL executado com sucesso (26 comandos processados).
+2026-08-11 22:41:51,227 - INFO - [1/7] Extração...
+2026-08-11 22:41:51,227 - INFO -   Cache Parquet encontrado: ./input/agendaAnonimizado.parquet
+2026-08-11 22:41:52,947 - INFO -   Registros lidos: 462199
+2026-08-11 22:41:52,947 - INFO - [2/7] Mapeamento de colunas...
+2026-08-11 22:41:53,028 - INFO - [3/7] Limpeza e normalização...
+2026-08-11 22:41:53,188 - INFO - [4/7] Coerção de tipos...
+2026-08-11 22:41:53,480 - INFO - [5/7] Validação...
+2026-08-11 22:42:00,312 - INFO -   Válidos: 445723
+2026-08-11 22:42:00,313 - INFO -   Rejeitados: 16476
+2026-08-11 22:42:00,965 - INFO -   Relatório de rejeições gravado em output/rejeicoes/
+2026-08-11 22:42:00,965 - INFO - [6/7] Deduplicação...
+2026-08-11 22:42:01,679 - INFO -   Deduplicados: 445723 (duplicatas removidas: 0)
+2026-08-11 22:42:01,680 - INFO -   Carregando tabelas dimensão...
+2026-08-11 22:42:06,152 - INFO -   Dimensão PROFISSIONAL: 84 registros carregados
+2026-08-11 22:42:09,980 - INFO -   Dimensão ESPECIALIDADE: 12 registros carregados
+2026-08-11 22:42:26,814 - INFO -   Dimensão BENEFICIARIO: 75933 registros carregados
+2026-08-11 22:42:29,894 - INFO - SparkSession encerrada.
+2026-08-11 22:42:29,938 - INFO - Closing down clientserver connection
+2026-08-11 22:42:52,778 - INFO - ============================================================
+2026-08-11 22:42:52,778 - INFO - ETL Pipeline Big Data — PySpark
+2026-08-11 22:42:52,778 - INFO - ============================================================
+2026-08-11 22:42:54,466 - INFO - SparkSession criada: ETL Agendamentos - Big Data
+2026-08-11 22:42:54,466 - INFO - Execução de schema solicitada (execute_schema=true).
+2026-08-11 22:42:54,466 - INFO - Executando script SQL: create_tables.sql no banco savir005 (savir005.vpshost12372.mysql.dbaas.com.br)
+2026-08-11 22:42:54,971 - INFO - Executando script SQL: create_tables.sql
+2026-08-11 22:42:56,889 - INFO - Script SQL executado com sucesso (26 comandos processados).
+2026-08-11 22:42:56,899 - INFO - [1/7] Extração...
+2026-08-11 22:42:56,899 - INFO -   Cache Parquet encontrado: ./input/agendaAnonimizado.parquet
+2026-08-11 22:42:58,464 - INFO -   Registros lidos: 462199
+2026-08-11 22:42:58,464 - INFO - [2/7] Mapeamento de colunas...
+2026-08-11 22:42:58,537 - INFO - [3/7] Limpeza e normalização...
+2026-08-11 22:42:58,677 - INFO - [4/7] Coerção de tipos...
+2026-08-11 22:42:58,948 - INFO - [5/7] Validação...
+2026-08-11 22:43:05,359 - INFO -   Válidos: 445723
+2026-08-11 22:43:05,359 - INFO -   Rejeitados: 16476
+2026-08-11 22:43:05,984 - INFO -   Relatório de rejeições gravado em output/rejeicoes/
+2026-08-11 22:43:05,985 - INFO - [6/7] Deduplicação...
+2026-08-11 22:43:06,706 - INFO -   Deduplicados: 445723 (duplicatas removidas: 0)
+2026-08-11 22:43:06,706 - INFO -   Carregando tabelas dimensão...
+2026-08-11 22:43:10,923 - INFO -   Dimensão PROFISSIONAL: 84 registros carregados
+2026-08-11 22:43:14,572 - INFO -   Dimensão ESPECIALIDADE: 12 registros carregados
+2026-08-11 22:43:31,072 - INFO -   Dimensão BENEFICIARIO: 75933 registros carregados
+2026-08-11 22:43:34,057 - INFO - SparkSession encerrada.
+2026-08-11 22:43:34,101 - INFO - Closing down clientserver connection

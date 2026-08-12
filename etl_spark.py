@@ -674,43 +674,25 @@ def execute_sql_script(config: dict, script_path: str) -> None:
         )
         cursor = conn.cursor()
         
-        # O mysql-connector na versão instalada pode não suportar multi=True ou ter comportamento instável.
-        # Vamos processar os comandos individualmente com limpeza robusta.
         with open(script_path, "r", encoding="utf-8") as f:
             sql_script = f.read()
         
-        logging.info(f"Executando script SQL: {script_path}")
-        
-        # Remover comentários e normalizar o script
-        import re
-        # Remover comentários de bloco /* ... */
-        sql_script = re.sub(r'/\*.*?\*/', '', sql_script, flags=re.DOTALL)
-        
-        sql_clean = []
-        for line in sql_script.split('\n'):
-            # Remover comentários de linha -- ou #
-            line_clean = re.sub(r'--.*$', '', line)
-            line_clean = re.sub(r'#.*$', '', line_clean)
-            if line_clean.strip():
-                sql_clean.append(line_clean)
-        
-        sql_script = " ".join(sql_clean)
+        # O mysql-connector permite executar múltiplos comandos se o script for
+        # processado corretamente. Dividimos por ';' para evitar erros com
+        # comandos vazios ou problemas de parsing em algumas versões do driver.
         statements = [s.strip() for s in sql_script.split(";") if s.strip()]
         
-        count = 0
         for statement in statements:
-            try:
-                cursor.execute(statement)
-                count += 1
-                # Consumir eventuais conjuntos de resultados adicionais para manter a conexão limpa
-                while cursor.nextset():
-                    pass
-            except Exception as e_stmt:
-                logging.error(f"Erro no comando SQL: {statement[:100]}... Erro: {e_stmt}")
-                raise e_stmt
+            cursor.execute(statement)
+            # Consumir resultados (se houver) para manter o cursor limpo
+            while True:
+                if cursor.with_rows:
+                    cursor.fetchall()
+                if not cursor.nextset():
+                    break
         
         conn.commit()
-        logging.info(f"Script SQL executado com sucesso ({count} comandos processados).")
+        logging.info("Script SQL executado com sucesso.")
     except Exception as e:
         logging.error(f"Erro ao executar script SQL: {e}")
         if conn:
