@@ -8,7 +8,18 @@
   "validation": {
     "required": ["AG_ID", "PROF_ID", "ESP_ID", "BENEF_ID", "TBLPROCED_ID", "PLANO_ID", "CLI_ID", "SALA_ID", "TPA_ID", "USER_ID", "DTHORAAGENDA", "AG_STATUSAGENDAMENTO"],
     "ranges": {
-      "AGP_VALOR": { "minimum": 0 }
+      "AGP_VALOR": { "minimum": 0 },
+      "BENEF_ID": { "maximum": 2147483647 },
+      "AG_ID": { "maximum": 2147483647 },
+      "PROF_ID": { "maximum": 2147483647 },
+      "ESP_ID": { "maximum": 2147483647 },
+      "TBLPROCED_ID": { "maximum": 2147483647 },
+      "PLANO_ID": { "maximum": 2147483647 },
+      "CLI_ID": { "maximum": 2147483647 },
+      "SALA_ID": { "maximum": 2147483647 },
+      "TPA_ID": { "maximum": 2147483647 },
+      "TBL_IDCID": { "maximum": 2147483647 },
+      "USER_ID": { "maximum": 2147483647 }
     },
     "max_lengths": {
       "BENEF_NOME": 255

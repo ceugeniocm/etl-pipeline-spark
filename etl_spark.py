@@ -372,10 +372,18 @@ def validate(df: DataFrame, config: dict):
         if col_name not in df.columns:
             continue
         minimum = rules.get("minimum")
+        maximum = rules.get("maximum")
         if minimum is not None:
             reason_exprs.append(
                 F.when(
                     F.col(col_name).isNotNull() & (F.col(col_name) < minimum),
+                    F.lit(f"{col_name} fora do intervalo permitido"),
+                )
+            )
+        if maximum is not None:
+            reason_exprs.append(
+                F.when(
+                    F.col(col_name).isNotNull() & (F.col(col_name) > maximum),
                     F.lit(f"{col_name} fora do intervalo permitido"),
                 )
             )
