@@ -4,24 +4,6 @@ Aplicação desenvolvida em Python capaz de realizar a leitura, o
 tratamento e a inserção de dados em um banco de dados hospedado em nuvem, utilizando
 técnicas de programação aplicadas a Big Data.
 
-## Arquitetura
-
-```
-Excel/CSV/Parquet → spark.read → Mapeamento → Limpeza → Coerção de Tipos → Validação → Deduplicação → MySQL / Parquet / Delta Lake
-```
-
-### Fluxo do Pipeline
-
-| Etapa | Descrição | API Spark |
-|-------|-----------|-----------|
-| **Extração** | Leitura de Excel, CSV ou Parquet | `spark.read.parquet()`, `spark.read.csv()`, pandas (Excel) |
-| **Mapeamento** | Renomeação de colunas origem → destino | `df.select()`, `F.col().alias()` |
-| **Limpeza** | Trim, upper, remoção de pontuação, colapso de espaços | `F.trim()`, `F.upper()`, `F.regexp_replace()` |
-| **Coerção de Tipos** | Conversão para int, decimal, datetime, date | `df.cast()`, `F.to_date()`, `F.to_timestamp()` |
-| **Validação** | Campos obrigatórios, faixas, comprimentos máximos | `df.filter()`, `F.col().isNotNull()` |
-| **Deduplicação** | Remoção de duplicatas por chave de negócio | `df.dropDuplicates()` |
-| **Carga** | Gravação no MySQL, Parquet ou Delta Lake | `df.write.jdbc()`, `df.write.parquet()` |
-
 ## Requisitos
 
 - Python 3.8+
@@ -43,6 +25,15 @@ pip install -r requirements.txt
 
 ## Uso
 
+```bash
+spark-submit \
+    --master "local[*]" \
+    --driver-memory 4g \
+    --driver-java-options "-Dlog4j.configurationFile=file:log4j2.properties" \
+    --packages com.mysql:mysql-connector-j:8.3.0 \
+    etl_spark.py config_bigdata.json
+```
+
 Para instruções detalhadas de configuração, execução e **testes**, consulte o [Guia de Uso Detalhado](docs/usage.md).
 
 ## Entregáveis do Trabalho
@@ -54,6 +45,24 @@ Esta aplicação atende a todos os requisitos do trabalho de "Processamento de D
 3.  **Documentação de Execução**: Este `README.md`.
 4.  **Banco de Dados Povoado**: Conexão configurada em `config_bigdata.json` para banco na nuvem.
 5.  **Relatório de Tratamentos**: Localizado em `docs/relatorio-tratamento.md`.
+
+## Arquitetura
+
+```
+Excel/CSV/Parquet → spark.read → Mapeamento → Limpeza → Coerção de Tipos → Validação → Deduplicação → MySQL / Parquet / Delta Lake
+```
+
+### Fluxo do Pipeline
+
+| Etapa | Descrição | API Spark |
+|-------|-----------|-----------|
+| **Extração** | Leitura de Excel, CSV ou Parquet | `spark.read.parquet()`, `spark.read.csv()`, pandas (Excel) |
+| **Mapeamento** | Renomeação de colunas origem → destino | `df.select()`, `F.col().alias()` |
+| **Limpeza** | Trim, upper, remoção de pontuação, colapso de espaços | `F.trim()`, `F.upper()`, `F.regexp_replace()` |
+| **Coerção de Tipos** | Conversão para int, decimal, datetime, date | `df.cast()`, `F.to_date()`, `F.to_timestamp()` |
+| **Validação** | Campos obrigatórios, faixas, comprimentos máximos | `df.filter()`, `F.col().isNotNull()` |
+| **Deduplicação** | Remoção de duplicatas por chave de negócio | `df.dropDuplicates()` |
+| **Carga** | Gravação no MySQL, Parquet ou Delta Lake | `df.write.jdbc()`, `df.write.parquet()` |
 
 ## Estrutura do Projeto
 
