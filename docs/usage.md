@@ -2,6 +2,35 @@
 
 Este documento fornece detalhes técnicos sobre a execução, parametrização e suporte a formatos do pipeline ETL Spark.
 
+## Pré-requisitos e Dependência do Java (JDK)
+
+O Apache Spark e o PySpark necessitam da **Java Virtual Machine (JVM)** para sua execução (suporte recomendado para **Java 11 ou 17**).
+
+### Por que o Java não está no `requirements.txt`?
+- O arquivo `requirements.txt` é exclusivo para o gerenciador de pacotes do Python (`pip`), gerenciando apenas bibliotecas distribuídas via PyPI.
+- O Java (JDK) é uma dependência a nível de **Sistema Operacional**, devendo ser instalado diretamente no host ou provido via container.
+
+### Configuração por Ambiente
+
+1. **Ambiente Local**:
+   - **Linux (Ubuntu/Debian)**:
+     ```bash
+     sudo apt update && sudo apt install -y openjdk-17-jdk
+     ```
+   - **macOS (Homebrew)**:
+     ```bash
+     brew install openjdk@17
+     ```
+   - **Windows**: Instalar via instalador oficial do OpenJDK / Oracle JDK.
+   - **Variável de Ambiente**: Certifique-se de que a variável `JAVA_HOME` e o binário `java` estejam configurados no seu `PATH`.
+     ```bash
+     export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
+     export PATH=$JAVA_HOME/bin:$PATH
+     ```
+
+2. **Ambiente Docker**:
+   - A imagem base definida no `Dockerfile` (`bitnami/spark:3`) já inclui o Java (JDK) e o Apache Spark pré-instalados e configurados, dispensando instalação manual do Java.
+
 ## Detalhamento do Comando spark-submit
 
 Ao executar localmente, o comando utilizado é:
