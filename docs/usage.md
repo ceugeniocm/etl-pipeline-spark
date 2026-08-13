@@ -113,6 +113,20 @@ O pipeline é altamente configurável. Abaixo, um exemplo completo da estrutura:
 | Parquet | `parquet` | Data lake simples, análises batch |
 | Delta Lake | `delta` | Data lake com controle transacional |
 
+## Testes
+
+### Executando Testes via Pytest
+
+```bash
+python -m pytest tests/ -v
+```
+
+### Executando Testes via Unittest
+
+```bash
+python -m unittest discover tests/ -v
+```
+
 ## Performance Estimada
 
 | Volume | PySpark (local) | PySpark (cluster 4 nós) |

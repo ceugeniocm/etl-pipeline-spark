@@ -43,28 +43,7 @@ pip install -r requirements.txt
 
 ## Uso
 
-Para instruções detalhadas de configuração e uso avançado (cluster, Docker, etc.), consulte o [Guia de Uso Detalhado](docs/usage.md).
-
-### Execução Local Rápida
-
-```bash
-spark-submit \
-    --master "local[*]" \
-    --packages com.mysql:mysql-connector-j:8.3.0 \
-    etl_spark.py config_bigdata.json
-```
-
-## Testes
-
-```bash
-python -m pytest tests/ -v
-```
-
-Ou com unittest:
-
-```bash
-python -m unittest discover tests/ -v
-```
+Para instruções detalhadas de configuração, execução e **testes**, consulte o [Guia de Uso Detalhado](docs/usage.md).
 
 ## Entregáveis do Trabalho
 
@@ -109,4 +88,4 @@ etl-pipeline-spark/
 ## Documentação
 
 Consulte o [Guia de Uso Detalhado](docs/usage.md) para informações sobre configuração e execução avançada.
-Para a documentação completa da arquitetura e decisões de design, veja `docs/bigdata-trabalho.md` no projeto [etl-pipeline](https://github.com/ceugeniocm/etl-pipeline).
+Para a documentação completa da arquitetura e decisões de design, veja `docs/`
