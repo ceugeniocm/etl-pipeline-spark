@@ -1,7 +1,7 @@
 # ETL Pipeline Spark
 
 Aplicação desenvolvida em Python capaz de realizar a leitura, o
-tratamento e a inserção de dados em um banco de dados hospedado em nuvem, utilizando
+tratamento e a inserção de dados (agendamentos médicos), em um banco de dados hospedado em nuvem, utilizando
 técnicas de programação aplicadas a Big Data.
 
 ## Requisitos
