@@ -295,6 +295,10 @@ def coerce_types(df: DataFrame, mapping: dict) -> DataFrame:
     if type_updates:
         df = df.withColumns(type_updates)
 
+    # Tratamento de nulos específicos para campos obrigatórios no banco que devem ter default 0
+    if "TBL_IDCID" in df.columns:
+        df = df.withColumn("TBL_IDCID", F.coalesce(F.col("TBL_IDCID"), F.lit(0)))
+
     return df
 
 

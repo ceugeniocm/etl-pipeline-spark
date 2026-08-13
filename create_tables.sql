@@ -39,7 +39,7 @@ CREATE TABLE ESPECIALIDADE (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE BENEFICIARIO (
-    BENEF_ID            INT             NOT NULL,
+    BENEF_ID            BIGINT             NOT NULL,
     BENEF_NOME          VARCHAR(150)    NOT NULL,
     BENEF_DTNASC        DATETIME,
     BENEF_CPF           VARCHAR(11),
@@ -99,7 +99,7 @@ CREATE TABLE USUARIO (
 CREATE TABLE PLANO (
     PLANO_ID            INT             NOT NULL,
     PLANO_DESCRICAO     VARCHAR(100),
-    CONV_ANS            VARCHAR(20)     NOT NULL,
+    CONV_ANS            VARCHAR(20),
     PRIMARY KEY (PLANO_ID),
     CONSTRAINT FK_PLANO_CONVENIO
         FOREIGN KEY (CONV_ANS)
@@ -114,17 +114,17 @@ CREATE TABLE PLANO (
 
 CREATE TABLE AGENDAMENTO (
     AG_ID                   INT             NOT NULL,
-    PROF_ID                 INT             NOT NULL,
-    ESP_ID                  INT             NOT NULL,
-    BENEF_ID                INT             NOT NULL,
-    TBLPROCED_ID            INT             NOT NULL,
-    PLANO_ID                INT             NOT NULL,
-    CLI_ID                  INT             NOT NULL,
-    SALA_ID                 INT             NOT NULL,
-    TPA_ID                  INT             NOT NULL,
-    TBL_IDCID               INT             NOT NULL,
-    USER_ID                 INT             NOT NULL,
-    DTHORAAGENDA            DATETIME        NOT NULL,
+    PROF_ID                 INT,
+    ESP_ID                  INT,
+    BENEF_ID                BIGINT,
+    TBLPROCED_ID            INT,
+    PLANO_ID                INT,
+    CLI_ID                  INT,
+    SALA_ID                 INT,
+    TPA_ID                  INT,
+    TBL_IDCID               INT,
+    USER_ID                 INT,
+    DTHORAAGENDA            DATETIME,
     AG_STATUSAGENDAMENTO    VARCHAR(1),
     PRIMARY KEY (AG_ID),
 
